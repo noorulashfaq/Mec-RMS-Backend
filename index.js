@@ -2,13 +2,15 @@ const express = require("express")
 const app = express()
 const base = require("./db")
 const bodyParser = require("body-parser")
-const ecrWorkshop = require("./ecrWorkshop")
+const loginPage = require("./loginPage")
+const ecr = require("./ecr")
 
-app.listen(1234,()=>{
+app.listen(4321,()=>{
     console.log("Server started")
 })
 
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 
-app.use('/ecrWorkshop',ecrWorkshop)
+app.use('/loginPage',loginPage)
+app.use('/ecr',ecr)
