@@ -3,7 +3,7 @@ POST http://localhost:4321/ecr/ecrProposal/data_management_workshop
 Content-Type: application/json
 
 {
-    "report_id":"RPT5003",
+    "report_id":"RPT5005",
     "event_name":"Workshop",
     "event_title":"Vue JS",
     "event_organizer":"CSE",
@@ -26,98 +26,119 @@ Content-Type: application/json
     "event_date_from":"0000-00-00",
     "event_date_to":"0000-00-00",
     "acdyr_id":3,
-    "dept_id":3,
+    "dept_id":4,
     "sem_id":1
 }
 
-###
-
 ### Level 1 proposal
-GET http://localhost:4321/ecr/loadforlevel1/data_management_workshop/3/6003
+
+GET http://localhost:4321/ecr/loadforlevel1/data_management_workshop/4/6004
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel1/data_management_workshop/3/6003/RPT5003
+PUT http://localhost:4321/ecr/acknowledgelevel1/data_management_workshop/4/6003/RPT5005
 
 ### Level 2 proposal
 
-GET http://localhost:4321/ecr/loadforlevel2/data_management_workshop/3/6000
+GET http://localhost:4321/ecr/loadforlevel2/data_management_workshop/4/6002
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel2/data_management_workshop/3/6000/RPT5003
+PUT http://localhost:4321/ecr/acknowledgelevel2/data_management_workshop/4/6002/RPT5005
 
 ### Level 3 proposal
 
-GET http://localhost:4321/ecr/loadforlevel3/data_management_workshop/3/6008
+GET http://localhost:4321/ecr/loadforlevel3/data_management_workshop/4/6007
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel3/data_management_workshop/3/6008/RPT5003
+PUT http://localhost:4321/ecr/acknowledgelevel3/data_management_workshop/4/6007/RPT5005
 
 ### Level 4 proposal
 
-GET http://localhost:4321/ecr/loadforlevel4/data_management_workshop/3/6007
+GET http://localhost:4321/ecr/loadforlevel4/data_management_workshop/4/6005
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel4/data_management_workshop/3/6007/RPT5003
+PUT http://localhost:4321/ecr/acknowledgelevel4/data_management_workshop/4/6005/RPT5005
 
-### Level 4 proposal
+### Level 5 proposal
 
-GET http://localhost:4321/ecr/loadforlevel5/data_management_workshop/1/6009
-
-###
-
-PUT http://localhost:4321/ecr/acknowledgelevel5/data_management_workshop/1/6009/RPT5001
-
-################## Proposal over #####################
+GET http://localhost:4321/ecr/loadforlevel5/data_management_workshop/4/6009
 
 ###
 
-### Faculty is receiving his/her proposal after approved
-GET http://localhost:4321/ecrWorkshop/loadforCompletion/1
+PUT http://localhost:4321/ecr/acknowledgelevel5/data_management_workshop/4/6009/RPT5005
 
-###
+###################### Proposal over ##########################
+###############################################################
+###############################################################
+###############################################################
+###############################################################
+###############################################################
+###############################################################
+
+### Faculty is receiving for event completion after proposal approved by all the levels
+
+GET http://localhost:4321/ecr/loadecrCompletion/4/data_management_workshop
 
 ### Faculty is updating the completion report
-PUT http://localhost:4321/ecrWorkshop/ecrCompletion/RPT0000001
+
+PUT http://localhost:4321/ecr/ecrCompletion/data_management_workshop/RPT5005
 Content-Type: application/json
 
 {
     "event_photo_1":"photo/path1",
     "event_photo_2":"photo/path2",
     "event_po":"1,2,3,4",
-    "completion_date":"0000-00-00",
-    "completion_hod":"0000-00-00",
-    "completion_principal":"0000-00-00",
     "pdf":"pdf/path",
-    "event_duration":"3hrs",
-    "event_os":"Dr. G. Kavitha",
+    "event_date_from":"0000-00-00",
+    "event_date_to":"0000-00-00",
+    "event_organizing_secretary":"Dr. G. Kavitha",
     "event_time":"10 am",
     "event_description":"The event was about how to develop a webpage using React JS",
     "event_budget_utilized":50000
 }
 
-###
+### Level 1 completion
 
-### HoD is receiving the completion report
-GET http://localhost:4321/ecrWorkshop/eventcompletionloadlevel1/1/6001
-
-###
-
-### HoD approves the completion report
-PUT http://localhost:4321/ecrWorkshop/completionacknowledgelevel1/1/6001
+GET http://localhost:4321/ecr/completionloadforlevel1/data_management_workshop/4/6003
 
 ###
 
-### Principal is receiving the completion report
-GET http://localhost:4321/ecrWorkshop/completionloadlevel2/1
+PUT http://localhost:4321/ecr/completionacknowledgelevel1/data_management_workshop/4/6003/RPT5005
+
+### Level 2 completion
+
+GET http://localhost:4321/ecr/completionloadforlevel2/data_management_workshop/4/6002
 
 ###
 
-### Principal approves the completion report
-PUT http://localhost:4321/ecrWorkshop/completionacknowledgelevel2/1/RPT0000001
+PUT http://localhost:4321/ecr/completionacknowledgelevel2/data_management_workshop/4/6002/RPT5005
+
+### Level 3 completion
+
+GET http://localhost:4321/ecr/completionloadforlevel3/data_management_workshop/4/6007
+
+###
+
+PUT http://localhost:4321/ecr/completionacknowledgelevel3/data_management_workshop/4/6007/RPT5005
+
+### Level 4 completion
+
+GET http://localhost:4321/ecr/completionloadforlevel4/data_management_workshop/4/6005
+
+###
+
+PUT http://localhost:4321/ecr/completionacknowledgelevel4/data_management_workshop/4/6005/RPT5005
+
+### Level 5 completion
+
+GET http://localhost:4321/ecr/completionloadforlevel5/data_management_workshop/4/6009
+
+###
+
+PUT http://localhost:4321/ecr/completionacknowledgelevel5/data_management_workshop/4/6009/RPT5005
 
 ################################################################################
 ################################################################################
