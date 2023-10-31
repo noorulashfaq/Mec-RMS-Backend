@@ -1,0 +1,19 @@
+###    DROPDOWN FOR FORMS
+
+GET http://localhost:4321/dropdown/dropdownMajorType
+
+###
+
+GET http://localhost:4321/dropdown/dropdownSubTypeWithMajor/2001
+
+###
+
+GET http://localhost:4321/dropdown/dropdownDept
+
+###
+
+GET http://localhost:4321/dropdown/dropdownFacultyWithDept/1
+
+###
+
+GET http://localhost:4321/dropdown/dropdownVenue

@@ -1394,4 +1394,128 @@ route.put('/completionacknowledgelevel5/:tableName/:deptId/:empId/:report_id',as
 })
 
 
-module.exports = route;
+route.put('/reject/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
+    const dId=req.params.deptId
+    const eId=req.params.empId
+    const rId=req.params.report_id
+    let sql = `select * from data_approval where dept_id=? and data_table_name="${req.params.tableName}"`
+    base.query(sql,[dId],(err,rows)=>{
+        if(err){
+            res.status(500).json({error:err.message})
+            return
+        }
+        else if(rows.length==0){
+            res.status(201).json({error:"No matches found"})
+            return
+        }
+        // res.status(200).json({rows})
+        console.log("Hello"+rows[0].report_lvl2)
+        if(rows[0].report_lvl2==null){
+            console.log("HEY")
+            let sql=`select report_id from ${req.params.tableName} where dept_id=? and report_proposal_status=0 and final_proposal_status=0 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+            base.query(sql,[dId,rId],(err,row)=>{
+            if(err){
+                res.status(500).json({error:err.message})
+                return
+            }
+            if(row.length==0){
+                res.status(404).json({error:"No records to acknowledge"})
+                return
+            }
+        //no need
+            console.log(row)
+            sql="call GetNonNullColumnsForDeptId(?)"
+            base.query(sql,[dId],(err,rows)=>{
+            if(err){
+                res.status(500).json({error:err.message})
+                return
+            }
+            if(rows.length==0){
+                res.status(404).json({error:"No records available to acknowledge"})
+                return
+            }
+            console.log(rows[0])
+            let count=rows.length
+            // for (let index = 0; index < rows.length; index++)
+            // {count++;}
+            console.log(count)
+            //upto this
+            console.log(rows[0][1].column_value.includes(eId))
+            if(rows[0][1].column_value.includes(eId)){
+                console.log("In")
+                sql=`update ${req.params.tableName} set rejected_by=?, final_report_status=2, final_proposal_status=2, final_completion_status=2 where dept_id=? and report_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+                base.query(sql,[eId,dId,rId],(err,result)=>{
+                    if(err){
+                        console.log("111")
+                        res.status(500).json({error:err.message})
+                        return
+                    }
+                    if(result.affectedRows==0){
+                        console.log("222")
+                        res.status(404).json({error:"Event hasn't completed yet"})
+                        return
+                    }
+                    console.log("333")
+                    res.status(200).json({message:"acknowledged by level"})
+                })
+            }
+            else{
+                res.status(404).json({error:"Forbidden access"})
+            }
+        })
+    })
+        }else{
+            console.log("hiiiiiiiiii")
+            let sql=`select report_id from ${req.params.tableName} where dept_id=? and report_proposal_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+    base.query(sql,[dId,rId],(err,row)=>{
+        if(err){
+            res.status(500).json({error:err.message})
+            return
+        }
+        if(row.length==0){
+            res.status(404).json({error:"No records to acknowledge"})
+            return
+        }
+        //no need
+        sql="call GetNonNullColumnsForDeptId(?)"
+        base.query(sql,[dId],(err,rows)=>{
+            if(err){
+                res.status(500).json({error:err.message})
+                return
+            }
+            if(rows.length==0){
+                res.status(404).json({error:"No records available to acknowledge"})
+                return
+            }
+            console.log(rows[0])
+            let count=rows.length
+            // for (let index = 0; index < rows.length; index++)
+            // {count++;}
+            console.log(count)
+            //upto this
+            console.log(rows[0][0].column_value)
+            if(rows[0][0].column_value.includes(eId)){
+                sql=`update ${req.params.tableName} set lvl_1_proposal_sign=?, report_proposal_status=report_proposal_status+1 where dept_id=? and report_proposal_status=0 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and final_proposal_status=0 and report_id=?`
+                base.query(sql,[eId,dId,rId],(err,result)=>{
+                    if(err){
+                        res.status(500).json({error:err.message})
+                        return
+                    }
+                    if(result.affectedRows==0){
+                        res.status(404).json({error:"Event hasn't completed yet"})
+                        return
+                    }
+                    res.status(200).json({message:"acknowledged by level"})
+                })
+            }
+            else{
+                res.status(404).json({error:"Forbidden access"})
+            }
+        })
+    })
+        }
+    })
+})
+
+
+module.exports = route

@@ -1,10 +1,10 @@
 ### Faculty proposing
-POST http://localhost:4321/ecr/ecrProposal/data_management_workshop
+POST http://localhost:4321/ecr/ecrProposal/data_management_Seminar
 Content-Type: application/json
 
 {
     "report_id":"RPT5005",
-    "event_name":"Workshop",
+    "event_name":"seminar",
     "event_title":"Vue JS",
     "event_organizer":"CSE",
     "event_sponsor":"CSI & Management",
@@ -32,43 +32,43 @@ Content-Type: application/json
 
 ### Level 1 proposal
 
-GET http://localhost:4321/ecr/loadforlevel1/data_management_workshop/4/6004
+GET http://localhost:4321/ecr/loadforlevel1/data_management_seminar/4/6004
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel1/data_management_workshop/4/6003/RPT5005
+PUT http://localhost:4321/ecr/acknowledgelevel1/data_management_seminar/4/6003/RPT5005
 
 ### Level 2 proposal
 
-GET http://localhost:4321/ecr/loadforlevel2/data_management_workshop/4/6002
+GET http://localhost:4321/ecr/loadforlevel2/data_management_seminar/4/6002
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel2/data_management_workshop/4/6002/RPT5005
+PUT http://localhost:4321/ecr/acknowledgelevel2/data_management_seminar/4/6002/RPT5005
 
 ### Level 3 proposal
 
-GET http://localhost:4321/ecr/loadforlevel3/data_management_workshop/4/6007
+GET http://localhost:4321/ecr/loadforlevel3/data_management_seminar/4/6007
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel3/data_management_workshop/4/6007/RPT5005
+PUT http://localhost:4321/ecr/acknowledgelevel3/data_management_seminar/4/6007/RPT5005
 
 ### Level 4 proposal
 
-GET http://localhost:4321/ecr/loadforlevel4/data_management_workshop/4/6005
+GET http://localhost:4321/ecr/loadforlevel4/data_management_seminar/4/6005
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel4/data_management_workshop/4/6005/RPT5005
+PUT http://localhost:4321/ecr/acknowledgelevel4/data_management_seminar/4/6005/RPT5005
 
 ### Level 5 proposal
 
-GET http://localhost:4321/ecr/loadforlevel5/data_management_workshop/4/6009
+GET http://localhost:4321/ecr/loadforlevel5/data_management_seminar/4/6009
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel5/data_management_workshop/4/6009/RPT5005
+PUT http://localhost:4321/ecr/acknowledgelevel5/data_management_seminar/4/6009/RPT5005
 
 ###################### Proposal over ##########################
 ###############################################################
@@ -80,11 +80,11 @@ PUT http://localhost:4321/ecr/acknowledgelevel5/data_management_workshop/4/6009/
 
 ### Faculty is receiving for event completion after proposal approved by all the levels
 
-GET http://localhost:4321/ecr/loadecrCompletion/4/data_management_workshop
+GET http://localhost:4321/ecr/loadecrCompletion/4/data_management_seminar
 
 ### Faculty is updating the completion report
 
-PUT http://localhost:4321/ecr/ecrCompletion/data_management_workshop/RPT5005
+PUT http://localhost:4321/ecr/ecrCompletion/data_management_seminar/RPT5005
 Content-Type: application/json
 
 {
@@ -102,43 +102,43 @@ Content-Type: application/json
 
 ### Level 1 completion
 
-GET http://localhost:4321/ecr/completionloadforlevel1/data_management_workshop/4/6003
+GET http://localhost:4321/ecr/completionloadforlevel1/data_management_seminar/4/6003
 
 ###
 
-PUT http://localhost:4321/ecr/completionacknowledgelevel1/data_management_workshop/4/6003/RPT5005
+PUT http://localhost:4321/ecr/completionacknowledgelevel1/data_management_seminar/4/6003/RPT5005
 
 ### Level 2 completion
 
-GET http://localhost:4321/ecr/completionloadforlevel2/data_management_workshop/4/6002
+GET http://localhost:4321/ecr/completionloadforlevel2/data_management_seminar/4/6002
 
 ###
 
-PUT http://localhost:4321/ecr/completionacknowledgelevel2/data_management_workshop/4/6002/RPT5005
+PUT http://localhost:4321/ecr/completionacknowledgelevel2/data_management_seminar/4/6002/RPT5005
 
 ### Level 3 completion
 
-GET http://localhost:4321/ecr/completionloadforlevel3/data_management_workshop/4/6007
+GET http://localhost:4321/ecr/completionloadforlevel3/data_management_seminar/4/6007
 
 ###
 
-PUT http://localhost:4321/ecr/completionacknowledgelevel3/data_management_workshop/4/6007/RPT5005
+PUT http://localhost:4321/ecr/completionacknowledgelevel3/data_management_seminar/4/6007/RPT5005
 
 ### Level 4 completion
 
-GET http://localhost:4321/ecr/completionloadforlevel4/data_management_workshop/4/6005
+GET http://localhost:4321/ecr/completionloadforlevel4/data_management_seminar/4/6005
 
 ###
 
-PUT http://localhost:4321/ecr/completionacknowledgelevel4/data_management_workshop/4/6005/RPT5005
+PUT http://localhost:4321/ecr/completionacknowledgelevel4/data_management_seminar/4/6005/RPT5005
 
 ### Level 5 completion
 
-GET http://localhost:4321/ecr/completionloadforlevel5/data_management_workshop/4/6009
+GET http://localhost:4321/ecr/completionloadforlevel5/data_management_seminar/4/6009
 
 ###
 
-PUT http://localhost:4321/ecr/completionacknowledgelevel5/data_management_workshop/4/6009/RPT5005
+PUT http://localhost:4321/ecr/completionacknowledgelevel5/data_management_seminar/4/6009/RPT5005
 
 ################################################################################
 ################################################################################
