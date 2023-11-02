@@ -1,9 +1,9 @@
 ### Faculty proposing
-POST http://localhost:4321/ecr/ecrProposal/data_management_Seminar
+POST http://localhost:4321/ecr/ecrProposal/data_management_seminar
 Content-Type: application/json
 
 {
-    "report_id":"RPT5005",
+    "report_id":"RPT5008",
     "event_name":"seminar",
     "event_title":"Vue JS",
     "event_organizer":"CSE",
@@ -26,25 +26,25 @@ Content-Type: application/json
     "event_date_from":"0000-00-00",
     "event_date_to":"0000-00-00",
     "acdyr_id":3,
-    "dept_id":4,
+    "dept_id":1,
     "sem_id":1
 }
 
 ### Level 1 proposal
 
-GET http://localhost:4321/ecr/loadforlevel1/data_management_seminar/4/6004
+GET http://localhost:4321/ecr/loadforlevel1/data_management_seminar/1/6001
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel1/data_management_seminar/4/6003/RPT5005
+PUT http://localhost:4321/ecr/acknowledgelevel1/data_management_seminar/1/6001/RPT5008
 
 ### Level 2 proposal
 
-GET http://localhost:4321/ecr/loadforlevel2/data_management_seminar/4/6002
+GET http://localhost:4321/ecr/loadforlevel2/data_management_seminar/1/6000
 
 ###
 
-PUT http://localhost:4321/ecr/acknowledgelevel2/data_management_seminar/4/6002/RPT5005
+PUT http://localhost:4321/ecr/acknowledgelevel2/data_management_seminar/1/6000/RPT5008
 
 ### Level 3 proposal
 

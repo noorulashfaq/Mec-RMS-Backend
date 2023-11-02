@@ -17,3 +17,17 @@ GET http://localhost:4321/dropdown/dropdownFacultyWithDept/1
 ###
 
 GET http://localhost:4321/dropdown/dropdownVenue
+
+### LOGIN
+
+POST http://localhost:4321/filter/loginCredentials
+Content-Type: application/json
+
+{
+    "faculty_id":6000,
+    "faculty_password":"sridhar@cse"
+}
+
+###
+
+GET http://localhost:4321/dropdown/currentAcademicYear

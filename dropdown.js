@@ -48,8 +48,8 @@ route.get('/dropdownDept',async(req,res)=>{
     })
 })
 
-route.get('/dropdownFacultyWithDept/:deptId',async(req,res)=>{
-    let sql="select * from data_faculty where faculty_dept_id=?"
+route.get('/dropdownFacultyWithDept',async(req,res)=>{
+    let sql="select * from data_faculty inner join data_dept on data_faculty.dept_id = data_dept.dept_id where not faculty_designation_id in (401,402,403,404)"
     base.query(sql,[req.params.deptId],(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})
@@ -65,6 +65,21 @@ route.get('/dropdownFacultyWithDept/:deptId',async(req,res)=>{
 
 route.get('/dropdownVenue',async(req,res)=>{
     let sql="select * from data_venue"
+    base.query(sql,(err,rows)=>{
+        if(err){
+            res.status(500).json({error:err.message})
+            return
+        }
+        else if(rows.length==0){
+            res.status(201).json({error:"No matches found"})
+            return
+        }
+        res.status(200).json({rows})
+    })
+})
+
+route.get('/currentAcademicYear',async(req,res)=>{
+    let sql="select acd_yr,acd_status from predefined_academic_year where acd_status=1 or acd_status=2"
     base.query(sql,(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})

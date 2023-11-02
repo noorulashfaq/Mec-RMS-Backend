@@ -1,10 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import 'bootstrap/dist/css/bootstrap.min.css'
-import FormFileExample from './filterpg';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import { Login } from './Login';
+import { Dashboard } from './Dashboard';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <FormFileExample/>
-);
+  <React.StrictMode>
+    {
+      (sessionStorage.getItem('person'))
+      ?
+      <>
+        <Dashboard/>
+      </>
+      :
+      <><Login/></>
+    }
 
+  </React.StrictMode>
+);

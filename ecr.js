@@ -63,7 +63,7 @@ route.post('/ecrProposal/:tableName',async(req,res)=>{
 route.get('/loadforlevel1/:tableName/:deptId/:empId',async(req,res)=>{
     const dId=req.params.deptId
     const eId=req.params.empId
-    let sql=`select report_lvl1 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl1 like ?`
+    let sql=`call check_lvl1_approvals(?,?)`
     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
         if(err){
             res.status(500).json({error:err.message})
@@ -73,7 +73,7 @@ route.get('/loadforlevel1/:tableName/:deptId/:empId',async(req,res)=>{
             res.status(404).json({error:"No matches"})
             return
         }
-        sql=`select * from ${req.params.tableName} where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+        sql=`call onloadallproposalsforlevel1(?);`
         base.query(sql,[dId],(err,rows)=>{
             if(err){res.status(500).json({error:err.message});return;}
             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
@@ -112,8 +112,8 @@ route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,re
             }
         //no need
             console.log(row)
-            sql="call GetNonNullColumnsForDeptId(?)"
-            base.query(sql,[dId],(err,rows)=>{
+            sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+            base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -165,8 +165,8 @@ route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,re
             return
         }
         //no need
-        sql="call GetNonNullColumnsForDeptId(?)"
-        base.query(sql,[dId],(err,rows)=>{
+        sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+        base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -208,7 +208,7 @@ route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,re
 route.get('/loadforlevel2/:tableName/:deptId/:empId',async(req,res)=>{
     const dId=req.params.deptId
     const eId=req.params.empId
-    let sql=`select report_lvl2 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl2 like ?`
+    let sql=`call check_lvl2_approvals(?,?)`
     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
         if(err){
             res.status(500).json({error:err.message})
@@ -218,7 +218,7 @@ route.get('/loadforlevel2/:tableName/:deptId/:empId',async(req,res)=>{
             res.status(404).json({error:"No matches"})
             return
         }
-        sql=`select * from ${req.params.tableName} where report_proposal_status=1 and lvl_2_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+        sql=`call onloadallproposalsforlevel2(?);`
         base.query(sql,[dId],(err,rows)=>{
             if(err){res.status(500).json({error:err.message});return;}
             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
@@ -257,8 +257,8 @@ route.put('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,re
             }
         //no need
             console.log(row)
-            sql="call GetNonNullColumnsForDeptId(?)"
-            base.query(sql,[dId],(err,rows)=>{
+            sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+            base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -310,8 +310,8 @@ route.put('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,re
             return
         }
         //no need
-        sql="call GetNonNullColumnsForDeptId(?)"
-        base.query(sql,[dId],(err,rows)=>{
+        sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+        base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -324,9 +324,10 @@ route.put('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,re
             let count=rows.length
             // for (let index = 0; index < rows.length; index++)
             // {count++;}
-            console.log(count)
+            // console.log(count)
             //upto this
-            if(rows[0][1].column_value.includes(eId)){
+            console.log(rows[0][0].column_value)
+            if(rows[0][0].column_value.includes(eId)){
                 sql=`update ${req.params.tableName} set lvl_2_proposal_sign=?, report_proposal_status=report_proposal_status+1 where dept_id=? and report_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and final_proposal_status=0 and report_id=?`
                 base.query(sql,[eId,dId,rId],(err,result)=>{
                     if(err){
@@ -352,7 +353,7 @@ route.put('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,re
 route.get('/loadforlevel3/:tableName/:deptId/:empId',async(req,res)=>{
     const dId=req.params.deptId
     const eId=req.params.empId
-    let sql=`select report_lvl3 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl3 like ?`
+    let sql=`call check_lvl3_approvals(?,?)`
     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
         if(err){
             res.status(500).json({error:err.message})
@@ -362,7 +363,7 @@ route.get('/loadforlevel3/:tableName/:deptId/:empId',async(req,res)=>{
             res.status(404).json({error:"No matches"})
             return
         }
-        sql=`select * from ${req.params.tableName} where report_proposal_status=2 and lvl_3_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+        sql=`call onloadallproposalsforlevel3(?);`
         base.query(sql,[dId],(err,rows)=>{
             if(err){res.status(500).json({error:err.message});return;}
             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
@@ -401,8 +402,8 @@ route.put('/acknowledgelevel3/:tableName/:deptId/:empId/:report_id',async(req,re
             }
         //no need
             console.log(row)
-            sql="call GetNonNullColumnsForDeptId(?)"
-            base.query(sql,[dId],(err,rows)=>{
+            sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+            base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -454,8 +455,8 @@ route.put('/acknowledgelevel3/:tableName/:deptId/:empId/:report_id',async(req,re
             return
         }
         //no need
-        sql="call GetNonNullColumnsForDeptId(?)"
-        base.query(sql,[dId],(err,rows)=>{
+        sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+        base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -496,7 +497,7 @@ route.put('/acknowledgelevel3/:tableName/:deptId/:empId/:report_id',async(req,re
 route.get('/loadforlevel4/:tableName/:deptId/:empId',async(req,res)=>{
     const dId=req.params.deptId
     const eId=req.params.empId
-    let sql=`select report_lvl4 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl4 like ?`
+    let sql=`call check_lvl4_approvals(?,?)`
     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
         if(err){
             res.status(500).json({error:err.message})
@@ -506,7 +507,7 @@ route.get('/loadforlevel4/:tableName/:deptId/:empId',async(req,res)=>{
             res.status(404).json({error:"No matches"})
             return
         }
-        sql=`select * from ${req.params.tableName} where report_proposal_status=3 and lvl_4_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+        sql=`call onloadallproposalsforlevel4(?);`
         base.query(sql,[dId],(err,rows)=>{
             if(err){res.status(500).json({error:err.message});return;}
             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
@@ -545,8 +546,8 @@ route.put('/acknowledgelevel4/:tableName/:deptId/:empId/:report_id',async(req,re
             }
         //no need
             console.log(row)
-            sql="call GetNonNullColumnsForDeptId(?)"
-            base.query(sql,[dId],(err,rows)=>{
+            sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+            base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -598,8 +599,8 @@ route.put('/acknowledgelevel4/:tableName/:deptId/:empId/:report_id',async(req,re
             return
         }
         //no need
-        sql="call GetNonNullColumnsForDeptId(?)"
-        base.query(sql,[dId],(err,rows)=>{
+        sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+        base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -639,7 +640,7 @@ route.put('/acknowledgelevel4/:tableName/:deptId/:empId/:report_id',async(req,re
 route.get('/loadforlevel5/:tableName/:deptId/:empId',async(req,res)=>{
     const dId=req.params.deptId
     const eId=req.params.empId
-    let sql=`select report_lvl5 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl5 like ?`
+    let sql=`call check_lvl5_approvals(?,?)`
     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
         if(err){
             res.status(500).json({error:err.message})
@@ -649,7 +650,7 @@ route.get('/loadforlevel5/:tableName/:deptId/:empId',async(req,res)=>{
             res.status(404).json({error:"No matches"})
             return
         }
-        sql=`select * from ${req.params.tableName} where report_proposal_status=4 and lvl_5_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+        sql=`call onloadallproposalsforlevel5(?);`
         base.query(sql,[dId],(err,rows)=>{
             if(err){res.status(500).json({error:err.message});return;}
             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
@@ -673,8 +674,8 @@ route.put('/acknowledgelevel5/:tableName/:deptId/:empId/:report_id',async(req,re
             return
         }
         //no need
-        sql="call GetNonNullColumnsForDeptId(?)"
-        base.query(sql,[dId],(err,rows)=>{
+        sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+        base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -795,8 +796,8 @@ route.put('/completionacknowledgelevel1/:tableName/:deptId/:empId/:report_id',as
             }
         //no need
             console.log(row)
-            sql="call GetNonNullColumnsForDeptId(?)"
-            base.query(sql,[dId],(err,rows)=>{
+            sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+            base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -848,8 +849,8 @@ route.put('/completionacknowledgelevel1/:tableName/:deptId/:empId/:report_id',as
             return
         }
         //no need
-        sql="call GetNonNullColumnsForDeptId(?)"
-        base.query(sql,[dId],(err,rows)=>{
+        sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+        base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -940,8 +941,8 @@ route.put('/completionacknowledgelevel2/:tableName/:deptId/:empId/:report_id',as
             }
         //no need
             console.log(row)
-            sql="call GetNonNullColumnsForDeptId(?)"
-            base.query(sql,[dId],(err,rows)=>{
+            sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+            base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -993,8 +994,8 @@ route.put('/completionacknowledgelevel2/:tableName/:deptId/:empId/:report_id',as
             return
         }
         //no need
-        sql="call GetNonNullColumnsForDeptId(?)"
-        base.query(sql,[dId],(err,rows)=>{
+        sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+        base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -1084,8 +1085,8 @@ route.put('/completionacknowledgelevel3/:tableName/:deptId/:empId/:report_id',as
             }
         //no need
             console.log(row)
-            sql="call GetNonNullColumnsForDeptId(?)"
-            base.query(sql,[dId],(err,rows)=>{
+            sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+            base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -1137,8 +1138,8 @@ route.put('/completionacknowledgelevel3/:tableName/:deptId/:empId/:report_id',as
             return
         }
         //no need
-        sql="call GetNonNullColumnsForDeptId(?)"
-        base.query(sql,[dId],(err,rows)=>{
+        sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+        base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -1228,8 +1229,8 @@ route.put('/completionacknowledgelevel4/:tableName/:deptId/:empId/:report_id',as
             }
         //no need
             console.log(row)
-            sql="call GetNonNullColumnsForDeptId(?)"
-            base.query(sql,[dId],(err,rows)=>{
+            sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+            base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -1281,8 +1282,8 @@ route.put('/completionacknowledgelevel4/:tableName/:deptId/:empId/:report_id',as
             return
         }
         //no need
-        sql="call GetNonNullColumnsForDeptId(?)"
-        base.query(sql,[dId],(err,rows)=>{
+        sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+        base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -1356,8 +1357,8 @@ route.put('/completionacknowledgelevel5/:tableName/:deptId/:empId/:report_id',as
             return
         }
         //no need
-        sql="call GetNonNullColumnsForDeptId(?)"
-        base.query(sql,[dId],(err,rows)=>{
+        sql="call GetNonNullColumnsForDataApprovals(?,?,?);"
+        base.query(sql,[dId,eId,req.params.tableName],(err,rows)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
