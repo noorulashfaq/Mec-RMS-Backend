@@ -31,3 +31,7 @@ Content-Type: application/json
 ###
 
 GET http://localhost:4321/dropdown/currentAcademicYear
+
+###
+
+GET http://localhost:4321/filter/getCurrPrevAcdYrWithSubType/3001
