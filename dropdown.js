@@ -49,7 +49,7 @@ route.get('/dropdownDept',async(req,res)=>{
 })
 
 route.get('/dropdownFacultyWithDept',async(req,res)=>{
-    let sql="select * from data_faculty inner join data_dept on data_faculty.dept_id = data_dept.dept_id where not faculty_designation_id in (401,402,403,404)"
+    let sql="select * from data_faculties inner join data_dept on data_faculties.dept_id = data_dept.dept_id where not faculty_designation_id in (401,402,403,404)"
     base.query(sql,[req.params.deptId],(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})

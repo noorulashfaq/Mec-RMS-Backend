@@ -29,10 +29,10 @@ export const HodMenu=()=>{
                     <Navbar.Collapse id="hod">
                         <Nav className="ms-auto">
                             <a className="me-2 btn btn-outline-success" href="/ecr">View ECR</a>
-                            <a className="me-2 btn btn-outline-success" href="/setaf">View SetAf</a>
+                            <a className="me-2 btn btn-outline-success" href="/setaf">View SeTAF</a>
                             <a className="me-2 btn btn-outline-success" href="/faculties">Filter Faculties</a>
                             <a className="me-2 btn btn-outline-success" href="/shortecr">Filter ECR</a>
-                            <a className="me-2 btn btn-outline-success" href="/shortsetaf">Filter SetAf</a>
+                            <a className="me-2 btn btn-outline-success" href="/shortsetaf">Filter SeTAF</a>
                             <button className="me-2 btn btn-outline-danger" onClick={()=>{
                                 sessionStorage.removeItem("person")
                                 window.location.assign("/")
