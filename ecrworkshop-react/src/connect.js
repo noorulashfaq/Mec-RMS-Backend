@@ -29,7 +29,8 @@ export const onPropose=async(obj)=>{
 
 export const loadForLevel1=async(dept,emp)=>{
     // alert(dept)
-    const receive = await axios.get(`${url}/seminar/loadForLevel1/data_management_seminar/${dept}/${emp}`)
+    // const receive = await axios.get(`${url}/seminar/loadForLevel1/data_management_seminar/${dept}/${emp}`)
+    const receive = await axios.get(`http://localhost:4321/ecr/loadforlevel1/data_management_seminar/${dept}/${emp}`)
     return receive.data.rows
 
 }

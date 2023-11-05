@@ -48,19 +48,19 @@ export const ViewSeminar=()=>{
         <table className="table table-stripped text-nowrap">
                                 <thead>
                                     <tr>
-                                        <th>Report ID</th><tH>Title</tH><th>Major Type</th><th>Sub Type</th><th>Co-ordinator</th>
+                                        <th>Report ID</th><th>Title</th><th>Major Type</th><th>Sub Type</th><th>Co-ordinator</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        ecrs.map((val,key)=>(
-                                            <tr>
+                                        ecrs.map((val,key)=>{
+                                            <tr key={val.report_id}>
                                                 <td>{val.report_id}</td>
                                                 <td>{val.event_title}</td>
                                                 <td>ECR</td>
                                                 <td>{val.event_name}</td>
-                                                <td>{val.event_coordinator}</td>
+                                                    <td>{val.event_coordinator}</td>
                                                 <td className="row justify-content-evenly">
                                                 <button type="button" onClick={async()=>{
                                                         // alert(val.workshop_id+" "+val.dept_id)
@@ -69,7 +69,7 @@ export const ViewSeminar=()=>{
                                                     <button type="button" className="btn btn-dark col-4">Reject</button>
                                                     </td>
                                             </tr>
-                                        ))
+                                        })
                                     }
                                 </tbody>
                             </table>

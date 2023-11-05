@@ -26,38 +26,38 @@ export const CreateEvent=()=>{
     return(
         <>
       
-        <div class="main">
+        <div className="main">
  
-            <div class="searchbar2">
+            <div className="searchbar2">
                 <input type="text"
                        name=""
                        id=""
                        placeholder="Search"/>
-                <div class="searchbtn">
+                <div className="searchbtn">
                   <img src=
 "https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
-                        class="icn srchicn"
+                        className="icn srchicn"
                         alt="search-button"/>
                   </div>
             </div>
- <div class="sel">
+ <div className="sel">
 <style>  
     </style>
-        <div class="button-container">
-          <button class="menu-button" data-category="Technical Symposium">Technical Symposium</button>
-          <button class="menu-button" data-category="Student Techtalk">Student Techtalk</button>
-          <button class="menu-button" data-category="Online Seminar">Online Seminar</button>
-          <button class="menu-button" data-category="Workshop">Workshop</button>
-          <button class="menu-button" data-category="MIST">MIST</button>
-          <button class="menu-button" data-category="NETS">NETS</button>
-          <button class="menu-button" data-category="GUEST Lectures">GUEST Lectures</button>
-          <button class="menu-button" data-category="AIM">AIM</button>
+        <div className="button-container">
+          <button className="menu-button" data-category="Technical Symposium">Technical Symposium</button>
+          <button className="menu-button" data-category="Student Techtalk">Student Techtalk</button>
+          <button className="menu-button" data-category="Online Seminar">Online Seminar</button>
+          <button className="menu-button" data-category="Workshop">Workshop</button>
+          <button className="menu-button" data-category="MIST">MIST</button>
+          <button className="menu-button" data-category="NETS">NETS</button>
+          <button className="menu-button" data-category="GUEST Lectures">GUEST Lectures</button>
+          <button className="menu-button" data-category="AIM">AIM</button>
         </div>
 </div>
-            <div class="report-container1">
-                <div class="report-header">
-                    <h1 class="recent-Articles">Your Reports</h1>
-                    <a className="topic-heading" href="/add"><button class="view" id="addButton">+ Add</button></a>
+            <div className="report-container1">
+                <div className="report-header">
+                    <h1 className="recent-Articles">Your Reports</h1>
+                    <a className="topic-heading" href="/add"><button className="view" id="addButton">+ Add</button></a>
                               </div>
    <table className='table table-striped '>
                     <thead>

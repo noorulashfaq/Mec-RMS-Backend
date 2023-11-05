@@ -80,7 +80,7 @@ GET http://localhost:1234/seminar/supply/Cloud-2023-09-11-1694405954
 GET http://localhost:1234/seminar/dept/1
 
 ### HoD is receiving the requested proposal
-GET http://localhost:1234/seminar/loadforlevel1/1/6001
+GET http://localhost:1234/seminar/loadforlevel1/data_management_seminar/1/6001
 
 ###
 

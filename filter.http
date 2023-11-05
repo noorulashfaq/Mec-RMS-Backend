@@ -35,3 +35,7 @@ GET http://localhost:4321/dropdown/currentAcademicYear
 ###
 
 GET http://localhost:4321/filter/getCurrPrevAcdYrWithSubType/3001
+
+###
+
+GET http://localhost:4321/filter/getAcdYrWithSubType/3001

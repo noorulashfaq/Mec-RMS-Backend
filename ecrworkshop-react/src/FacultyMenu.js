@@ -4,17 +4,17 @@ export const FacultyMenu=()=>{
     const logged=JSON.parse(sessionStorage.getItem("person"))
     return(
         <>
-               <head>
+               <div>
                <img src=
 "https://mec.edu.in/wp-content/uploads/2021/02/main-logo.png"
-             class="icn menuicn"
+             className="icn menuicn"
              id="menuicn"
              alt="menu-icon"/> 
  
- <div class="logosec">
+ <div className="logosec">
  {/* <a className="demo" href="/generate-pdf"><h1>test</h1></a> */}
   
-         <div class="logo"> 
+         <div className="logo"> 
          Name : {
          logged.faculty_name
          } 
@@ -46,7 +46,7 @@ export const FacultyMenu=()=>{
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-    </head>
+    </div>
         
            
         </>

@@ -212,15 +212,15 @@ export const Add=()=>{
     return(
         <>
          <body>
-        <div class="main" >
+        <div className="main" >
 
             
          
 
 
  <div className="report-container" style={{justifyContent:'center'}}>
-     <div class="report-header">
-         <h1 class="recent-Articles">EVENT PROPOSAL</h1>
+     <div className="report-header">
+         <h1 className="recent-Articles">EVENT PROPOSAL</h1>
         
      </div>
      <div className="row justify-content-center"style={{justifyContent:'center'}}>

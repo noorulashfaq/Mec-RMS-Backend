@@ -7,9 +7,9 @@ export const HodMenu=()=>{
         <>
         <head>
  
- <div class="logosec">
+ <div className="logosec">
          
-         <div class="logo">Welcome ,  {
+         <div className="logo">Welcome ,  {
          logged.faculty_name
          } </div> 
 
@@ -17,7 +17,7 @@ export const HodMenu=()=>{
      </div>
      <img src=
 "https://mec.edu.in/wp-content/uploads/2021/02/main-logo.png"
-             class="icn menuicn"
+             className="icn menuicn"
              id="menuicn"
              alt="menu-icon"/>
             <Navbar bg="light" expand="lg">
