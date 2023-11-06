@@ -3,8 +3,6 @@ POST http://localhost:1234/seminar/propose/data_ecr_workshop
 Content-Type: application/json
 
 {
-  
-    
     "event_name":"Workshop",
     "event_title":"Express",
     "event_organizer":"CSE",
@@ -24,17 +22,12 @@ Content-Type: application/json
     "proposal_principal":"",
     "event_budget":40000,
     "event_coordinator":"Victor Prakash",
-  
     "coordinator_phno":9944085437,
     "coordinator_designation":406,
     "acdyr_id":"",
     "dept_id":1,
     "sem_id":1
 }
-
-
-
-
 
 ###
 

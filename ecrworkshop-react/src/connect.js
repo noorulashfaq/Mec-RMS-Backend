@@ -42,7 +42,7 @@ export const approveLevel1=async(dept,emp,report_id)=>{
 export const Table=async()=>
 {
      // alert("axios called")
-    const url="http://localhost:1234/seminar/dept/1";  
+    const url="";  
     const temp=await axios.get(`${url}`);
     // console.log(temp.data)
     return temp;

@@ -8,7 +8,6 @@ const loginPage = require("./loginPage")
 const ecr = require("./ecr")
 const filter = require("./filter")
 const dropdown = require("./dropdown")
-const principal = require("./principal")
 const dummy = require("./dummy")
 
 app.listen(4321,()=>{
@@ -23,5 +22,4 @@ app.use('/loginPage',loginPage)
 app.use('/ecr',ecr)
 app.use('/filter',filter)
 app.use('/dropdown',dropdown)
-app.use('/principal',principal)
 app.use('/dummy',dummy)

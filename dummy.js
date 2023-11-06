@@ -17,4 +17,41 @@ route.get('/checkFacultyLevels/:deptid/:empid',async(req,res)=>{
     })
 })
 
+// route.get('/getAllReportsAcrossTables/:deptId/:empId',async(req,res)=>{
+//     let receivedReports=[]
+//     let dId=req.params.deptId
+//     let eId=req.params.empId
+//     let sql=`call checkApprovalFacultyWithEmpId(?,?)`
+//     base.query(sql,[dId,eId],(err,rows)=>{
+//         if(err){
+//             res.status(500).json({err})
+//             return
+//         }
+//         else if(rows.length==0){
+//             res.status(401).json({"message":"no records found"})
+//             return
+//         }
+//         // res.status(200).json({rows})
+//         // console.log(rows[0])
+//         for(let i=0;i<rows[0].length;i++){
+//             // console.log(rows[0][i].data_table_name)
+//             let name_table=rows[0][i].data_table_name
+//             let sql=`select * from ${name_table} where dept_id=? and coordinator_emp_id=?`
+//             base.query(sql,[dId,eId],(err,result)=>{
+//                 if(err){
+//                     console.log("err")
+//                     return
+//                 }
+//                 else if(result.length==0){
+//                     console.log("message")
+//                     return
+//                 }
+//                 // console.log({result})
+//                 receivedReports.push({result})
+//             })
+//         }
+//         console.log(receivedReports)
+//     })
+// })
+
 module.exports=route

@@ -193,4 +193,51 @@ route.get('/getAcdYrWithSubType/:subId', async (req, res) => {
 });
 
 
+route.get('/getAllReportsAcrossTables/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let receivedReports = [];
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            const sql = 'call checkApprovalFacultyWithEmpId(?, ?)';
+            base.query(sql, [dId, eId], (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+
+        if (rows.length === 0) {
+            return res.status(401).json({ message: 'no records found' });
+        }
+
+        for (let i = 0; i < rows[0].length; i++) {
+            const name_table = rows[0][i].data_table_name;
+            const result = await new Promise((resolve, reject) => {
+                const sql = `select * from ${name_table} where dept_id=? and coordinator_emp_id=? and final_report_status!=1 and final_report_status!=2`
+                base.query(sql, [dId, eId], (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+
+            if (result.length > 0) {
+                receivedReports.push(result);
+            }
+        }
+
+        // console.log(receivedReports);
+        res.status(200).json({ receivedReports });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = route
