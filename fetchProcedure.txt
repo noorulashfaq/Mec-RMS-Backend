@@ -1,4 +1,4 @@
-DELIMITER //
+yyDELIMITER //
 
 CREATE PROCEDURE GetNonNullColumnsForDeptId(IN p_dept_id INT)
 BEGIN

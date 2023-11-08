@@ -7,9 +7,6 @@ import { FacultyPage } from "./FacultyPage"
 import { Add } from "./Add"
 import { PrincipalDashboard } from "./PrincipalDashboard"
 
-
-
-
 export const Dashboard=()=>{
     const[hodLog,setHodLog]=useState(false)
     const[principalLog,setPrincipalLog]=useState(false)
@@ -20,6 +17,7 @@ export const Dashboard=()=>{
             setHodLog(true)
         }
     },[])
+
     useEffect(()=>{
         const logged=JSON.parse(sessionStorage.getItem("person"))
         if(logged.faculty_designation_id===402){
@@ -29,30 +27,29 @@ export const Dashboard=()=>{
 
     return(
         <>
-            {
-                (principalLog) ?
+        {
+            (principalLog) ?
                 <>
-                <PrincipalDashboard/>
+                    <PrincipalDashboard/>
                 </>
-                :
+            :
                 (hodLog) ?
-                <>
-                    <HodDashboard/>
-                </>
+                    <>
+                        <HodDashboard/>
+                    </>
                 :
-                <>
-                    <BrowserRouter>
-                        <FacultyMenu/>
-                        <Routes>
-                        <Route path="" element={<FacultyPage/>} />
-                            <Route path="ecr" element={<CreateEvent/>} />
-                            <Route path="add" element={<Add/>} />
-                            {/* <Route path="setaf" element={} /> */}
-                            
-                        </Routes>
-                    </BrowserRouter>
-                </>
-            }
+                    <>
+                        <BrowserRouter>
+                            <FacultyMenu/>
+                            <Routes>
+                                <Route path="/" element={<FacultyPage/>} />
+                                <Route path="/ecr" element={<CreateEvent/>} />
+                                <Route path="/add" element={<Add/>} />
+                                {/* <Route path="setaf" element={} /> */}
+                            </Routes>
+                        </BrowserRouter>
+                    </>
+        }
         </>
     )
 }

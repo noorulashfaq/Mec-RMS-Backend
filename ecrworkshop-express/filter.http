@@ -1,0 +1,45 @@
+###    DROPDOWN FOR FORMS
+
+GET http://localhost:1234/dropdown/dropdownMajorType
+
+###
+
+GET http://localhost:1234/dropdown/dropdownSubTypeWithMajor/2001
+
+###
+
+GET http://localhost:1234/dropdown/dropdownDept
+
+###
+
+GET http://localhost:1234/dropdown/dropdownFacultyWithDept/1
+
+###
+
+GET http://localhost:1234/dropdown/dropdownVenue
+
+### LOGIN
+
+POST http://localhost:1234/filter/loginCredentials
+Content-Type: application/json
+
+{
+    "faculty_id":6000,
+    "faculty_password":"sridhar@cse"
+}
+
+###
+
+GET http://localhost:1234/dropdown/currentAcademicYear
+
+###
+
+GET http://localhost:1234/filter/getCurrPrevAcdYrWithSubType/3001
+
+###
+
+GET http://localhost:1234/filter/getAcdYrWithSubType/3001
+
+###
+
+GET http://localhost:1234/filter/getAllReportsAcrossTables/1/6007

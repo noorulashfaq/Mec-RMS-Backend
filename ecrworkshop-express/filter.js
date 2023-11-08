@@ -192,6 +192,8 @@ route.get('/getAcdYrWithSubType/:subId', async (req, res) => {
     }
 });
 
+
+
 route.get('/getAllReportsAcrossTables/:deptId/:empId', async (req, res) => {
     const dId = req.params.deptId;
     const eId = req.params.empId;

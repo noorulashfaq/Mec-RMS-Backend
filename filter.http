@@ -42,4 +42,4 @@ GET http://localhost:4321/filter/getAcdYrWithSubType/3001
 
 ###
 
-GET http://localhost:4321/filter/getAllReportsAcrossTables/1/6007
+GET http://localhost:4321/filter/getAllReportsAcrossTables/1/6000
