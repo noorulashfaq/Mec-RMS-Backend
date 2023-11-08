@@ -1,0 +1,150 @@
+### Faculty proposing
+POST http://localhost:1234/ecr/ecrProposal/data_management_seminar
+Content-Type: application/json
+
+{
+    "event_name":"seminar",
+    "event_title":"Vue JS",
+    "event_organizer":"CSE",
+    "event_sponsor":"CSI & Management",
+    "event_date":"2023-10-20",
+    "event_venue":"Data analytics lab",
+    "guest_name":"Mr. Razak Mohamed",
+    "guest_designation":"Full stack trainer, Zealous",
+    "guest_address":"Salem",
+    "guest_phone_number":8667002959,
+    "guest_email":"razaksrmd@gmail.com",
+    "student_count":64,
+    "faculty_count":3,
+    "others_count":0,
+    "event_budget":40000,
+    "event_coordinator":"Victor Prakash",
+    "coordinator_emp_id":6007,
+    "coordinator_phone_number":9944085437,
+    "coordinator_designation":406,
+    "event_date_from":"0000-00-00",
+    "event_date_to":"0000-00-00",
+    "acdyr_id":3,
+    "dept_id":1,
+    "sem_id":1
+}
+
+### Level 1 proposal
+
+GET http://localhost:1234/ecr/loadforlevel1/data_management_seminar/1/6001
+
+###
+
+PUT http://localhost:1234/ecr/acknowledgelevel1/data_management_seminar/1/6001/RPT5001
+
+### Level 2 proposal
+
+GET http://localhost:1234/ecr/loadforlevel2/data_management_seminar/1/6000
+
+###
+
+PUT http://localhost:1234/ecr/acknowledgelevel2/data_management_seminar/1/6000/RPT5001
+
+### Level 3 proposal
+
+GET http://localhost:1234/ecr/loadforlevel3/data_management_seminar/4/6007
+
+###
+
+PUT http://localhost:1234/ecr/acknowledgelevel3/data_management_seminar/4/6007/RPT5005
+
+### Level 4 proposal
+
+GET http://localhost:1234/ecr/loadforlevel4/data_management_seminar/4/6005
+
+###
+
+PUT http://localhost:1234/ecr/acknowledgelevel4/data_management_seminar/4/6005/RPT5005
+
+### Level 5 proposal
+
+GET http://localhost:1234/ecr/loadforlevel5/data_management_seminar/4/6009
+
+###
+
+PUT http://localhost:1234/ecr/acknowledgelevel5/data_management_seminar/4/6009/RPT5005
+
+###################### Proposal over ##########################
+###############################################################
+###############################################################
+###############################################################
+###############################################################
+###############################################################
+###############################################################
+
+### Faculty is receiving for event completion after proposal approved by all the levels
+
+GET http://localhost:1234/ecr/loadecrCompletion/4/data_management_seminar
+
+### Faculty is updating the completion report
+
+PUT http://localhost:1234/ecr/ecrCompletion/data_management_seminar/RPT5005
+Content-Type: application/json
+
+{
+    "event_photo_1":"photo/path1",
+    "event_photo_2":"photo/path2",
+    "event_po":"1,2,3,4",
+    "pdf":"pdf/path",
+    "event_date_from":"0000-00-00",
+    "event_date_to":"0000-00-00",
+    "event_organizing_secretary":"Dr. G. Kavitha",
+    "event_time":"10 am",
+    "event_description":"The event was about how to develop a webpage using React JS",
+    "event_budget_utilized":50000
+}
+
+### Level 1 completion
+
+GET http://localhost:1234/ecr/completionloadforlevel1/data_management_seminar/4/6003
+
+###
+
+PUT http://localhost:1234/ecr/completionacknowledgelevel1/data_management_seminar/4/6003/RPT5005
+
+### Level 2 completion
+
+GET http://localhost:1234/ecr/completionloadforlevel2/data_management_seminar/4/6002
+
+###
+
+PUT http://localhost:1234/ecr/completionacknowledgelevel2/data_management_seminar/4/6002/RPT5005
+
+### Level 3 completion
+
+GET http://localhost:1234/ecr/completionloadforlevel3/data_management_seminar/4/6007
+
+###
+
+PUT http://localhost:1234/ecr/completionacknowledgelevel3/data_management_seminar/4/6007/RPT5005
+
+### Level 4 completion
+
+GET http://localhost:1234/ecr/completionloadforlevel4/data_management_seminar/4/6005
+
+###
+
+PUT http://localhost:1234/ecr/completionacknowledgelevel4/data_management_seminar/4/6005/RPT5005
+
+### Level 5 completion
+
+GET http://localhost:1234/ecr/completionloadforlevel5/data_management_seminar/4/6009
+
+###
+
+PUT http://localhost:1234/ecr/completionacknowledgelevel5/data_management_seminar/4/6009/RPT5005
+
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
+### Request rejection
+PUT http://localhost:1234/ecr/reject/data_management_seminar/1/6000/RPT5001

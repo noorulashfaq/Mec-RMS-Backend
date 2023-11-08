@@ -1,13 +1,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { HodMenu } from "./HodMenu"
-import { ViewSeminar } from "./ViewSeminar"
+// import { ViewSeminar } from "./ViewSeminar"
+import { FacultyPage } from "./FacultyPage"
 
 export const HodDashboard=()=>{
     return(
         <>
             <BrowserRouter>
                 <HodMenu/>
-                <ViewSeminar/>
+                {/* <ViewSeminar/> */}
+                <FacultyPage/>
                 <Routes>
                     {/* <Route path="ecr" element={<ViewSeminar/>} />
                     <Route path="setaf" element={<ViewSetAfs/>} />

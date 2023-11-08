@@ -2,9 +2,15 @@ import axios from 'axios'
 
 const url="http://localhost:1234"
 
+// axios for login page
 export const onLogin=async(obj)=>{
-    console.log(obj)
-    const returned = await axios.post(`${url}/login`,obj)
+    const returned = await axios.post(`${url}/filter/loginCredentials`,obj)
+    return returned.data
+}
+
+// axios for proposing an event in add event page
+export const onPropose=async(obj)=>{
+    const returned = await axios.post(`${url}/ecr/ecrProposal/${obj.event_name}`,obj)
     return returned.data
 }
 
@@ -17,13 +23,6 @@ export const onProposalsLoad=async()=>{
         })
         return ids
 }
-
-export const onPropose=async(obj)=>{
-    // alert(JSON.stringify(obj))
-    const returned = await axios.post(`${url}/seminar/ecrProposal/${obj.event_name}`,obj)
-    return returned.data
-}
-
 
 export const loadForLevel1=async(dept,emp)=>{
     // alert(dept)
@@ -79,8 +78,9 @@ export const GetAllRequests=async(dept_id,faculty_id)=>{
     return re
 }
 
+// axios for venue dropdown of add event page
 export const Venue=async()=>{
-    const res=await axios.get(`${url}/seminar/dropdownVenue`)
+    const res=await axios.get(`${url}/dropdown/dropdownVenue`)
     let ids=[]
     res.data.rows.map((v)=>{
         ids.push(v)

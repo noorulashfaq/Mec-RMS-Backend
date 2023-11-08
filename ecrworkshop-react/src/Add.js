@@ -5,8 +5,6 @@ import Form from 'react-bootstrap/Form';
 import Select from 'react-select';
 import axios from "axios";
 
-
-
 export const Add=()=>{
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [option, setOptions] = useState([]);
@@ -33,7 +31,7 @@ export const Add=()=>{
       }));
     // console.log(facultySelect);
   
-        const logged=JSON.parse(sessionStorage.getItem("person"))
+    const logged=JSON.parse(sessionStorage.getItem("person"))
       
     const[information,setInformation]=useState("")
 
@@ -57,6 +55,7 @@ export const Add=()=>{
         "event_budget":null,
         "event_coordinator":"",
         "coordinator_emp_id":null,
+        "coordinator_phone_number":null,
         "coordinator_designation":null,
         "event_date_from":"0000-00-00",
         "event_date_to":"0000-00-00",
@@ -249,7 +248,7 @@ console.log(selectedOptions)
     <label htmlFor="guest_address">Address:</label>
     <input type="text" placeholder="Address of the guest" name="guest_address" value={seminar.guest_address} required onChange={infoCollect} /><br />
 
-    <label htmlFor="guest_phone_number">Mobile Number:</label>
+    <label htmlFor="guest_phone_number">Phone Number:</label>
     <input type="number" placeholder="Phone number of the guest" name="guest_phone_number" value={seminar.guest_phone_number} required onChange={infoCollect} /><br />
 
     <label htmlFor="guest_email">Mail ID:</label>
@@ -335,6 +334,7 @@ console.log(selectedOptions)
                 "event_budget":null,
                 "event_coordinator":"",
                 "coordinator_designation":null,
+                "coordinator_phone_number":null,
                 "acdyr_id":"",
                 "dept_id":null,
                 "sem_id":null

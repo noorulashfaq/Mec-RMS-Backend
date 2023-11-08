@@ -1,0 +1,37 @@
+DELIMITER //
+CREATE TRIGGER reportIdDataManagementSeminar
+BEFORE INSERT ON data_management_seminar
+FOR EACH ROW
+BEGIN
+    DECLARE next_rep_id varchar(100);
+    DECLARE unique_rep_id int;
+
+    SELECT CONCAT("RPT",COALESCE(MAX(report_num), 5000) + 1) INTO next_rep_id FROM report_id_source;
+    SELECT COALESCE(MAX(report_num),5000) + 1 INTO unique_rep_id FROM report_id_source;
+
+    SET NEW.report_id = next_rep_id;
+
+	insert into report_id_source values(unique_rep_id);
+END //
+DELIMITER;
+
+*********************************************************************************
+*********************************************************************************
+*********************************************************************************
+
+DELIMITER //
+CREATE TRIGGER reportIdDataManagementWorkshop
+BEFORE INSERT ON data_management_workshop
+FOR EACH ROW
+BEGIN
+    DECLARE next_rep_id varchar(100);
+    DECLARE unique_rep_id int;
+
+    SELECT CONCAT("RPT",COALESCE(MAX(report_num), 5000) + 1) INTO next_rep_id FROM report_id_source;
+    SELECT COALESCE(MAX(report_num),5000) + 1 INTO unique_rep_id FROM report_id_source;
+
+    SET NEW.report_id = next_rep_id;
+
+	insert into report_id_source values(unique_rep_id);
+END //
+DELIMITER;

@@ -4,6 +4,8 @@ const cors=require('cors')
 const workshop=require('./ecrWorkshopFlow')
 const authorize=require('./logging')
 const seminar=require('./ecrSeminarFlow')
+
+const ecr=require('./ecr')
 const filter=require('./filter')
 const dropdown=require('./dropdown')
 
@@ -13,9 +15,11 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use(cors())
 
-app.use('/ecr',workshop)
+// app.use('/ecr',workshop)
 app.use('',authorize)
 app.use('/seminar',seminar)
+
+app.use('/ecr',ecr)
 app.use('/filter',filter)
 app.use('/dropdown',dropdown)
 
