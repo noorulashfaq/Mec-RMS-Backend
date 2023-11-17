@@ -43,3 +43,11 @@ GET http://localhost:4321/filter/getAcdYrWithSubType/3001
 ###
 
 GET http://localhost:4321/filter/getAllReportsAcrossTables/1/6000
+
+###
+
+GET http://localhost:4321/filter/filterReportsWithDept/1
+
+###
+
+GET http://localhost:4321/filter/filtersForDashboard/1001/:academicYr/:semester/:dept/:faculty/:major/:sub

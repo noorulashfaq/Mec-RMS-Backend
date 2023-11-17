@@ -43,8 +43,8 @@ export const Dashboard=()=>{
                             <FacultyMenu/>
                             <Routes>
                                 <Route path="/" element={<FacultyPage/>} />
-                                <Route path="/ecr" element={<CreateEvent/>} />
-                                <Route path="/add" element={<Add/>} />
+                                <Route path="/ecr/:id" element={<CreateEvent/>} />
+                                <Route path="/add/:id" element={<Add/>} />
                                 {/* <Route path="setaf" element={} /> */}
                             </Routes>
                         </BrowserRouter>

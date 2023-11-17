@@ -18,6 +18,21 @@ route.post('/loginCredentials',async(req,res)=>{
     })
 })
 
+route.get('/filteringAPandASP',async(req,res)=>{
+    const sql=`select * from data_faculties inner join data_dept on data_faculties.dept_id = data_dept.dept_id where not faculty_designation_id in(401,402,403,404,405)`
+    base.query(sql,[],(err,rows)=>{
+        if(err){
+            res.status(500).json({error:err.message})
+            return
+        }
+        if(rows.length==0){
+            res.status(404).json({error:"No faculties"})
+            return
+        }
+        res.status(200).json({rows})
+    })
+})
+
 route.get('/filterReportsWithDept/:deptID',async(req,res)=>{
     let sql="call FetchReportsWithDept(?)"
     base.query(sql,[req.params.deptID],(err,rows)=>{
@@ -33,119 +48,20 @@ route.get('/filterReportsWithDept/:deptID',async(req,res)=>{
     })
 })
 
-// route.get('/getCurrPrevAcdYrWithSubType/:subId',async(req,res)=>{
-//     let sql=`
-//     UPDATE data_sub_report_type
-//     SET
-//             current_year = (
-//             SELECT acd_yr
-//             FROM predefined_academic_year
-//             WHERE predefined_academic_year.acd_status = 1
-//         )
-//     WHERE EXISTS (
-//         SELECT 1
-//         FROM predefined_academic_year
-//         WHERE predefined_academic_year.acd_status like "%1%"
-//     ) and sub_report_id = 3002 and acd_status="1"`
-//     base.query(sql,[req.params.subId],(err,rows)=>{
-//         if(err){
-//             res.status(500).json({error:err.message})
-//             return
-//         }
-//         else if(rows.length==0){
-//             res.status(201).json({error:"No matches found"})
-//             return
-//         }
-//         let sql=`select * from data_sub_report_type where sub_report_id = ? and acd_status like "%2%"`
-//     base.query(sql,[req.params.subId],(err,results)=>{
-//         if(err){
-//             res.status(500).json({error:err.message})
-//             return
-//         }
-//         else if(results.length==0){
-//             res.status(201).json({error:"No matches found"})
-//             return
-//         }
-//         // res.status(200).json({results})
-//         let sql=`UPDATE data_sub_report_type
-//         SET 
-//             previous_year = (
-//                 SELECT acd_yr
-//                 FROM predefined_academic_year
-//                 WHERE predefined_academic_year.acd_status = 2
-//             ),
-//                 current_year = (
-//                 SELECT acd_yr
-//                 FROM predefined_academic_year
-//                 WHERE predefined_academic_year.acd_status = 1
-//             )
-        
-//         WHERE EXISTS (
-//             SELECT 1
-//             FROM predefined_academic_year
-//             WHERE predefined_academic_year.acd_status like "%1%" or "%2%"
-//         ) and sub_report_id = ?;
-//         `
-//     base.query(sql,[req.params.subId],(err,rows)=>{
-//         if(err){
-//             res.status(500).json({error:err.message})
-//             return
-//         }
-//         else if(rows.length==0){
-//             res.status(201).json({error:"No matches found"})
-//             return
-//         }
-//         let sql=`select * from data_sub_report_type where sub_report_id=?`
-//     base.query(sql,[req.params.subId],(err,reply)=>{
-//         if(err){
-//             res.status(500).json({error:err.message})
-//             return
-//         }
-//         else if(reply.length==0){
-//             res.status(201).json({error:"No matches found"})
-//             return
-//         }
-//         res.status(200).json({reply})
-//     })
-//     })
-// })
-//     })
-// })
-
-// route.get('/getAcdYrWithSubType/:subId',async(req,res)=>{
-//     const acdYrResults = [];
-//     let sql=`select acd_status from data_sub_report_type where sub_report_id=?`
-//     base.query(sql,[req.params.subId],(err,rows)=>{
-//         if(err){
-//             res.status(500).json({error:err.message})
-//             return
-//         }
-//         else if(rows.length==0){
-//             res.status(201).json({error:"No matches found"})
-//             return
-//         }
-//         // res.status(200).json({rows})
-//         let definedYr=rows[0].acd_status.split(',')
-//         console.log(definedYr)
-//         for(let i=0;i<definedYr.length;i++){
-//             let sql=`select acd_yr from predefined_academic_year where acd_status=?`
-//             base.query(sql,[definedYr[i]],(err,results)=>{
-//                 if(err){
-//                     res.status(500).json({error:err.message})
-//                     return
-//                 }
-//                 else if(results.length==0){
-//                     res.status(201).json({error:"No matches found"})
-//                     return
-//                 }
-//                 // res.status(200).json({results})
-//                 acdYrResults.push(results[0])
-//             })
-//         }
-//         console.log(acdYrResults)
-//         res.status(200).json(acdYrResults)
-//     })
-// })
+route.get('/getHeadType',async(req,res)=>{
+    let sql="select * from data_head_report_type"
+    base.query(sql,[req.params.deptID],(err,rows)=>{
+        if(err){
+            res.status(500).json({error:err.message})
+            return
+        }
+        else if(rows.length==0){
+            res.status(201).json({error:"No matches found"})
+            return
+        }
+        res.status(200).json({rows})
+    })
+})
 
 route.get('/getAcdYrWithSubType/:subId', async (req, res) => {
     const acdYrResults = [];
@@ -198,7 +114,6 @@ route.get('/getAllReportsAcrossTables/:deptId/:empId', async (req, res) => {
     const dId = req.params.deptId;
     const eId = req.params.empId;
     let receivedReports = [];
-
     try {
         const rows = await new Promise((resolve, reject) => {
             const sql = 'call checkApprovalFacultyWithEmpId(?, ?)';

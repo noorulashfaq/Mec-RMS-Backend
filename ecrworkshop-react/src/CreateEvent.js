@@ -1,48 +1,33 @@
 import {Table} from './connect';
 import React, { useState, useEffect} from 'react';
 import "./sty.css"
+import SubButtons from './SubButtons';
+import { useParams } from 'react-router-dom';
 
 export const CreateEvent=()=>{
 
     const[allvalues,setAllvalues]=useState([]);
 
     const doSomething = async() =>{
-        const res=await Table()
+        const logged=JSON.parse(sessionStorage.getItem("person"))
+        const res=await Table(logged.dept_id)
         setAllvalues(res.data)
-        }
-        useEffect(() =>{
+    }
+    useEffect(() =>{
         doSomething();
-        },[])
+    },[])
+
+    const {id}=useParams()
 
     return(
         <>
 
 <div className="main">
-    <div className="searchbar2">
-        <input type="text" name="" id="" placeholder="Search"/>
-            <div className="searchbtn">
-                <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png" className="icn srchicn" alt="search-button"/>
-            </div>
-    </div>
-
-    <div className="sel">
-    <style></style>
-        <div className="button-container">
-            <button className="menu-button" data-category="Technical Symposium">Technical Symposium</button>
-            <button className="menu-button" data-category="Student Techtalk">Student Techtalk</button>
-            <button className="menu-button" data-category="Online Seminar">Online Seminar</button>
-            <button className="menu-button" data-category="Workshop">Workshop</button>
-            <button className="menu-button" data-category="MIST">MIST</button>
-            <button className="menu-button" data-category="NETS">NETS</button>
-            <button className="menu-button" data-category="GUEST Lectures">GUEST Lectures</button>
-            <button className="menu-button" data-category="AIM">AIM</button>
-        </div>
-    </div>
-
+    <SubButtons/>
     <div className="report-container1">
         <div className="report-header">
             <h1 className="recent-Articles">Your Reports</h1>
-                <a className="topic-heading" href="/add"><button className="view" id="addButton">+ Add</button></a>
+                <a className="topic-heading" href={`/add/${id}`}><button className="view" id="addButton">+ Add</button></a>
         </div>
 
     <table className='table table-striped '>

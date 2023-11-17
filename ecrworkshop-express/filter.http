@@ -1,6 +1,6 @@
 ###    DROPDOWN FOR FORMS
 
-GET http://localhost:1234/dropdown/dropdownMajorType
+GET http://localhost:1234/dropdown/dropdownMajorTypeWithHead/1001
 
 ###
 
@@ -34,7 +34,11 @@ GET http://localhost:1234/dropdown/currentAcademicYear
 
 ###
 
-GET http://localhost:1234/filter/getCurrPrevAcdYrWithSubType/3001
+# GET http://localhost:1234/filter/getCurrPrevAcdYrWithSubType/3001
+
+###
+
+GET http://localhost:1234/filter/getHeadType
 
 ###
 
@@ -42,4 +46,8 @@ GET http://localhost:1234/filter/getAcdYrWithSubType/3001
 
 ###
 
-GET http://localhost:1234/filter/getAllReportsAcrossTables/1/6007
+GET http://localhost:1234/filter/getAllReportsAcrossTables/1/6003
+
+###
+
+GET http://localhost:1234/filter/filteringAPandASP

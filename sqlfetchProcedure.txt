@@ -1,4 +1,4 @@
-yyDELIMITER //
+DELIMITER //
 
 CREATE PROCEDURE GetNonNullColumnsForDeptId(IN p_dept_id INT)
 BEGIN
@@ -95,7 +95,7 @@ CREATE PROCEDURE FetchReportsWithDept (deptid INT)
 BEGIN
     SELECT * FROM data_management_workshop where dept_id=deptid;
     SELECT * FROM data_management_seminar where dept_id=deptid;
-    SELECT * FROM data_management_guest_lecture where dept_id=deptid;    
+    SELECT * FROM data_management_guest_lecture where dept_id=deptid;
 END //
 DELIMITER ;
 ************************************************************************************************

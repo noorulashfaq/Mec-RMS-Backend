@@ -2,9 +2,9 @@ const express = require("express")
 const route = express.Router()
 const base = require("./db")
 
-route.get('/dropdownMajorType',async(req,res)=>{
-    let sql="select * from data_major_report_type"
-    base.query(sql,(err,rows)=>{
+route.get('/dropdownMajorTypeWithHead/:headId',async(req,res)=>{
+    let sql="select * from data_major_report_type where head_report_id=?"
+    base.query(sql,[req.params.headId],(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})
             return

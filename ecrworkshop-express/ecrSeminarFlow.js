@@ -103,8 +103,9 @@ route.get('/currentAcademicYear',async(req,res)=>{
 route.get('/dept/:obj',async(req,res)=>{
     // console.log(req.params.obj)
     let received=req.params.obj.split("-")
+    console.log(req.params.obj)
     console.log(received)
-    base.query("select * from data_management_seminar where dept_id in(?)",[received],(err,rows)=>{
+    base.query("select * from data_management_seminar where dept_id = ?",[received],(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})
             return
@@ -119,10 +120,7 @@ route.get('/dept/:obj',async(req,res)=>{
 })
 
 route.get('/find',async(req,res)=>{
-    // const dId=req.params.deptId
     const sql=`select * from data_faculties inner join data_dept on data_faculties.dept_id = data_dept.dept_id where not faculty_designation_id in(403,404,401,402)`
-//     INNER JOIN data_dept d ON f.dept_id = d.dept_id
-// WHERE f.faculty_desig NOT IN (403, 404);
     base.query(sql,[],(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})

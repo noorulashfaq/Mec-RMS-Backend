@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 
 const MulSel = () => {
+
   const [selectedOptions, setSelectedOptions] = useState([])
-  const [inputValue, setInputValue] = useState('');
 
 const handleInputChange = (event) => {
     const inputValue = event.target.value;
@@ -19,31 +19,39 @@ const handleInputChange = (event) => {
         }));
       setSelectedOptions(valuesArray);
     } else {
-      // Handle invalid input, such as showing an error message
-      alert('Invalid input format');
+      console.log('Invalid input format');
     }
-
-    // Update the inputValue state for the input field
-    setInputValue(inputValue)
-      const arrayToDb=[]
-  for(let i=0;i<selectedOptions.length;i++){
-    console.log(selectedOptions[i])
-    // arrayToDb.push(selectedOptions[i].value)
   }
-  // console.log(arrayToDb)
-// console.log(JSON.stringify(arrayToDb))
-  };
+  // the selectedOptions hook will have the splitted text in array format which contain a value and a label
+  // console.log(selectedOptions)
+
+  // using map, picking only value and pushing to result array
+  let result=[]
+  selectedOptions.map((item)=>{
+    if(!(result.includes(item.value))){
+      result.push(item.value)
+    }
+  })
+
+  // result is the final required array
+console.log(result)
+
+// we can now map the result array and put wherever we need.. like the attendance sheet
 
   return (
     <div>
       <h1>Multi select</h1><br/>
       <h1>Multi select</h1>
       <h2>Multi-Select Using Comma-Separated Input</h2>
+
+      {/* input box for getting comma separated text from user */}
       <input
         type="text"
         placeholder="Enter comma-separated values"
         onChange={handleInputChange}
       />
+
+      {/* dropdown that show the roll no entered like selected options */}
       <Select
         isMulti
         name="event_coordinator"
@@ -54,6 +62,8 @@ const handleInputChange = (event) => {
         placeholder="Select options..."
         closeMenuOnSelect={false}
       />
+
+      {/* just printing to check each numbers*/}
       {selectedOptions.map((item)=>{
             return(
                 <div>
@@ -61,6 +71,9 @@ const handleInputChange = (event) => {
                 </div>
             )
       })}
+
+{/* the result array is the array that has the comma separated text which is printed in console*/}
+
     </div>
   );
 }

@@ -51,9 +51,9 @@ export const ViewReqPrincipal=()=>{
 <div className="main">
     
 
-      <div className="report-container1">
+        <div className="report-container1">
         <div className="report-header">
-          <h1 className="recent-Articles">Requests</h1>
+            <h1 className="recent-Articles">Requests</h1>
         </div>
         <div>
         <h1 className="text-center text-success">{info}</h1>

@@ -1,38 +1,28 @@
 import { useEffect, useState } from "react"
 import "./sty.css";
-import { onProposalsLoad, onPropose,Venue,Major,SubReport,Academic} from "./connect"
+import { onProposalsLoad, onPropose,Venue,Major,SubReport,Academic, FacultyList} from "./connect"
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select';
 import axios from "axios";
+import { format } from 'date-fns';
+import { useParams } from "react-router-dom";
 
 export const Add=()=>{
+
+    const {id}=useParams()
+
     const [selectedOptions, setSelectedOptions] = useState([]);
-    const [option, setOptions] = useState([]);
 
     useEffect(() => {
-        Ven();
-        Maj();
+        Ven()
+        Maj(`${id}`)
         fillProposals()
-        Acad();
-
-    axios.get('http://localhost:1234/seminar/find')
-        .then((response) => {
-            setOptions(response.data.rows);
-        })
-        .catch((error) => {
-            console.error('Error fetching options:', error);
-        });
+        Acad()
+        Coordinator()
     }, []);
 
-
-    const options = option.map((val, key) => ({
-        value: val.faculty_id,
-        label: val.faculty_id+'-'+val.faculty_name+'-'+val.dept,
-      }));
-    // console.log(facultySelect);
-  
     const logged=JSON.parse(sessionStorage.getItem("person"))
-      
+
     const[information,setInformation]=useState("")
 
     const[seminar,setSeminar]=useState({
@@ -60,9 +50,10 @@ export const Add=()=>{
         "event_date_from":"0000-00-00",
         "event_date_to":"0000-00-00",
         "acdyr_id":null,
-        "dept_id":null,
+        "dept_id":logged.dept_id,
         "sem_id":null
     })
+// console.log(seminar)
 
     const[proposable,setProposable]=useState([])
     const fillProposals=async()=>{
@@ -77,49 +68,89 @@ export const Add=()=>{
     }
 
     const[year,setYear]=useState([])
-        const Acad=async()=>{
-            const t = await Academic()
-            setYear(t)
-        }
-
-        // useState for major type dropdown in add event page
-        const[major,setMajor]=useState([])
-        const Maj=async()=>{
-            const t = await Major()
-            setMajor(t)
-        }
-
-        //useState for sub type dropdown in add event page
-        const[sub,setSub]=useState([])
-        const Sub=async(mid)=>{
-            const t = await SubReport(mid)
-            setSub(t)
-        }
-
-    const handleChange = (eve) => {
-        setSelectedOptions(eve);
-
-        if(eve.target){
-            const{name,value}=eve.target
-            setSeminar((old)=>{
-                if(name==="event_coordinator"){
-                    return{
-                        ...old,
-                        [name]:value
-                    }
-                }
-            })
-        }
-        else{
-            alert("Not working")
-        }
+    const Acad=async()=>{
+        const t = await Academic()
+        setYear(t)
     }
-console.log(selectedOptions)
+
+    // useState for major type dropdown in add event page
+    const[major,setMajor]=useState([])
+    const Maj=async(id)=>{
+        const t = await Major(id)
+        setMajor(t)
+    }
+
+    //useState for sub type dropdown in add event page
+    const[sub,setSub]=useState([])
+    const Sub=async(mid)=>{
+        const t = await SubReport(mid)
+        console.log(t)
+        setSub(t)
+    }
+
+    const [option, setOptions] = useState([])
+    const Coordinator=async()=>{
+        const res = await FacultyList()
+        setOptions(res)
+    }
+    // console.log(option)
+
+    const options = option.map((val, key) => ({
+        value: val.faculty_id,
+        label: val.faculty_id+'-'+val.faculty_name+'-'+val.dept,
+    }));
+
+    const[facid,setFacid]=useState([])
+    const handleChange = (eve) => {
+        let updatedFacidString = facid;
+        for (var i = 0; i < eve.length; i++) {
+            const valueToAdd = eve[i].value;
+            if (!updatedFacidString.includes(valueToAdd)) {
+                if (updatedFacidString && updatedFacidString.length>1) {
+
+                updatedFacidString += ','; // Add a comma as a separator
+                }
+                updatedFacidString += valueToAdd;
+                // alert("setFacid works");
+            }
+        }
+        setFacid(updatedFacidString);
+        setSelectedOptions(eve);
+        setSeminar((old) => {
+            return{
+                ...old,
+                event_coordinator: updatedFacidString
+            }
+        })
+        setSeminar((old) => {
+            return {
+                ...old,
+                coordinator_emp_id: logged.faculty_id
+            }
+        })
+        setSeminar((old) => {
+            return {
+                ...old,
+                dept_id: logged.dept_id
+            }
+        })
+        setSeminar((old) => {
+            const date = new Date(); // Replace with your actual date value
+            const currentDate = format(date, 'dd-MM-yyyy');
+            return {
+                ...old,
+                proposal_date: currentDate
+            }
+        })
+    }
+console.log(seminar)
+
+// console.log(selectedOptions)
 
     const infoCollect=(eve)=>{
         const{name,value}=eve.target
         setSeminar((old)=>{
-            if(name==="event_name"||name==="event_title"||name==="event_venue"||name==="event_organizer"||name==="event_sponsor"||name==="guest_name"||name==="guest_designation"||name==="guest_address"||name==="guest_email"||name==="proposal_date"||name==="acdyr_id"){
+            if(name==="event_name"||name==="event_title"||name==="event_venue"||name==="event_organizer"||name==="event_sponsor"||name==="guest_name"||name==="guest_designation"||name==="guest_address"||name==="guest_email"||name==="proposal_date"||name==="event_coordinator"||name==="acdyr_id"){
                 return{
                     ...old,
                     [name]:value
@@ -132,18 +163,6 @@ console.log(selectedOptions)
                     [name]:parseInt(value)
                 }
             }
-            else if(name==="event_coordinator"){
-                return{
-                    ...old,
-                    [name]:value
-                }
-            }
-            else if(name==="event_date"){
-                return{
-                    ...old,
-                    [name]:value
-                }
-            }
             else{
                 return{
                     ...old,
@@ -152,7 +171,7 @@ console.log(selectedOptions)
             }
         })
     }
-    console.log(seminar)
+    // console.log(seminar)
 
     const callPropose=async()=>{
         const temp = await onPropose(seminar)
@@ -336,7 +355,7 @@ console.log(selectedOptions)
                 "coordinator_designation":null,
                 "coordinator_phone_number":null,
                 "acdyr_id":"",
-                "dept_id":null,
+                "dept_id":logged.dept_id,
                 "sem_id":null
             }
         })
