@@ -17,6 +17,28 @@ route.get('/checkFacultyLevels/:deptid/:empid',async(req,res)=>{
     })
 })
 
+route.get('/loadforlevel1/:deptId/:empId',async(req,res)=>{
+    const dId=req.params.deptId
+    const eId=req.params.empId
+    let sql=`call check_lvl1_approvals(?,?)`
+    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+        if(err){
+            res.status(500).json({error:err.message})
+            return
+        }
+        if(row.length==0){
+            res.status(404).json({error:"No matches"})
+            return
+        }
+        sql=`call onloadallproposalsforlevel1(?);`
+        base.query(sql,[dId],(err,rows)=>{
+            if(err){res.status(500).json({error:err.message});return;}
+            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
+            res.status(200).json({rows})
+        })
+    })
+})
+
 // route.get('/getAllReportsAcrossTables/:deptId/:empId',async(req,res)=>{
 //     let receivedReports=[]
 //     let dId=req.params.deptId

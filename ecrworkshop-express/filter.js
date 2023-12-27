@@ -4,7 +4,7 @@ const base = require("./db")
 
 route.post('/loginCredentials',async(req,res)=>{
     const{login_id,login_password}=req.body
-    const sql="select * from data_faculties where faculty_id=? and faculty_password=?"
+    const sql="select * from data_faculties where email=? and password=?"
     base.query(sql,[login_id,login_password],(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})

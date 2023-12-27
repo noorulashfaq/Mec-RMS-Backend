@@ -60,27 +60,154 @@ route.post('/ecrProposal/:tableName',async(req,res)=>{
         })
 })
 
-route.get('/loadforlevel1/:tableName/:deptId/:empId',async(req,res)=>{
-    const dId=req.params.deptId
-    const eId=req.params.empId
-    let sql=`call check_lvl1_approvals(?,?)`
-    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
+// route.get('/loadforlevel1/:tableName/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`call check_lvl1_approvals(?,?)`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             res.status(500).json({error:err.message})
+//             return
+//         }
+//         if(row.length==0){
+//             res.status(404).json({error:"No matches"})
+//             return
+//         }
+//         sql=`call onloadallproposalsforlevel1(?);`
+//         base.query(sql,[dId],(err,rows)=>{
+//             if(err){res.status(500).json({error:err.message});return;}
+//             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
+//             res.status(200).json({rows})
+//         })
+//     })
+// })
+
+// route.get('/loadforlevel1/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`select report_lvl1,data_table_name from data_approval where dept_id=${dId} and report_lvl1 like concat("%",${eId},"%")`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         if(row.length==0){
+//             console.log("No approvals")
+//             return
+//         }
+//         // res.status(200).json({row})
+//         let resultArr=[]
+//         for(let i=0;i<row.length;i++){
+//             sql=`select * from ${row[i].data_table_name} where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`
+//             base.query(sql,(err,rows)=>{
+//             if(err){console.log(err);return;}
+//             if(row.length==0){console.log("No records");return;}
+//             // res.status(200).json({rows})
+//             // console.log(rows)
+//             resultArr.push(rows)
+//             console.log(resultArr)
+//         })
+//         }
+//         res.status(200).json(resultArr)
+//     })
+// })
+
+// route.get('/loadforlevel1/:tableName/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let resultArr=[]
+//     let sql = "select * from data_sub_report_type where head_report_id=1001"
+//     base.query(sql,(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         // console.log(row[1].table_name)
+//         // res.status(200).json({row})
+//         for(let i=0;i<row.length;i++){
+//             console.log(row[i].table_name)
+//             let sql = `select report_lvl1,data_table_name from data_approval where dept_id=${dId} and report_lvl1 like concat("%",${eId},"%")`
+//             base.query(sql,(err,result)=>{
+//                 if(err){
+//                     console.log(err)
+//                     return
+//                 }
+//                 else if(result.length==0){
+//                     console.log("No approvals set")
+//                     return
+//                 }
+//                 console.log(result)
+//                 // res.status(200).json({result})
+//                 // resultArr.push({result})
+//         // res.status(200).json({resultArr})
+//         let sql=`select * from ${row[i].table_name} where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`
+//         base.query(sql,(err,results)=>{
+//             if(err){
+//                 console.log(err)
+//                 return
+//             }
+//             else if(result.length==0){
+//                 console.log("No records")
+//                 return
+//             }
+//             resultArr.push({results})
+//         })
+//     })
+//     }
+//     res.status(200).json({resultArr})
+//     })
+//     })
+// })
+
+route.get('/loadforlevel1/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let sql = `select report_lvl1, data_table_name from data_approval where dept_id=? and report_lvl1 like ?`;
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            base.query(sql, [dId, '%' + eId + '%'], (err, row) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            });
+        });
+
+        if (rows.length === 0) {
+            console.log("No approvals");
+            // res.status(200).json([]);
+            return;
         }
-        if(row.length==0){
-            res.status(404).json({error:"No matches"})
-            return
+
+        let resultArr = [];
+        for (let i = 0; i < rows.length; i++) {
+            sql = `select * from ${rows[i].data_table_name} where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`;
+
+            const resultRows = await new Promise((resolve, reject) => {
+                base.query(sql, (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows);
+                });
+            });
+
+            if (resultRows.length > 0) {
+                resultArr.push({resultRows});
+            }
         }
-        sql=`call onloadallproposalsforlevel1(?);`
-        base.query(sql,[dId],(err,rows)=>{
-            if(err){res.status(500).json({error:err.message});return;}
-            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
-            res.status(200).json({rows})
-        })
-    })
-})
+
+        res.status(200).json({resultArr});
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
@@ -205,27 +332,105 @@ route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,re
     })
 })
 
-route.get('/loadforlevel2/:tableName/:deptId/:empId',async(req,res)=>{
-    const dId=req.params.deptId
-    const eId=req.params.empId
-    let sql=`call check_lvl2_approvals(?,?)`
-    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
+// route.get('/loadforlevel2/:tableName/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`call check_lvl2_approvals(?,?)`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             res.status(500).json({error:err.message})
+//             return
+//         }
+//         if(row.length==0){
+//             res.status(404).json({error:"No matches"})
+//             return
+//         }
+//         sql=`call onloadallproposalsforlevel2(?);`
+//         base.query(sql,[dId],(err,rows)=>{
+//             if(err){res.status(500).json({error:err.message});return;}
+//             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
+//             res.status(200).json({rows})
+//         })
+//     })
+// })
+
+// route.get('/loadforlevel2/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let resultArr=[]
+//     let sql=`select report_lvl2,data_table_name from data_approval where dept_id=${dId} and report_lvl2 like concat("%",${eId},"%")`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         if(row.length==0){
+//             console.log("No approvals")
+//             return
+//         }
+//         // res.status(200).json({row})
+//         for(let i=0;i<row.length;i++){
+//             sql=`select * from ${row[i].data_table_name} where report_proposal_status=1 and lvl_2_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`
+//             base.query(sql,(err,rows)=>{
+//                 if(err){console.log(err);return;}
+//                 if(row.length==0){console.log("No records");return;}
+//                 // res.status(200).json({rows})
+//                 resultArr.push({rows})
+//         })
+//         }
+//         res.status(200).json(resultArr)
+//     })
+// })
+
+route.get('/loadforlevel2/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let resultArr = [];
+    let sql = `select report_lvl2, data_table_name from data_approval where dept_id=? and report_lvl2 like ?`;
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            base.query(sql, [dId, '%' + eId + '%'], (err, row) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            });
+        });
+
+        if (rows.length === 0) {
+            console.log("No approvals");
+            // res.status(200).json([]);
+            return;
         }
-        if(row.length==0){
-            res.status(404).json({error:"No matches"})
-            return
+
+        for (let i = 0; i < rows.length; i++) {
+            sql = `select * from ${rows[i].data_table_name} where report_proposal_status=1 and lvl_2_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`;
+
+            const resultRows = await new Promise((resolve, reject) => {
+                base.query(sql, (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows);
+                });
+            });
+
+            if (resultRows.length > 0) {
+                resultArr.push({resultRows});
+            }
         }
-        sql=`call onloadallproposalsforlevel2(?);`
-        base.query(sql,[dId],(err,rows)=>{
-            if(err){res.status(500).json({error:err.message});return;}
-            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
-            res.status(200).json({rows})
-        })
-    })
-})
+
+        res.status(200).json({resultArr});
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 route.put('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
@@ -350,27 +555,105 @@ route.put('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,re
     })
 })
 
-route.get('/loadforlevel3/:tableName/:deptId/:empId',async(req,res)=>{
-    const dId=req.params.deptId
-    const eId=req.params.empId
-    let sql=`call check_lvl3_approvals(?,?)`
-    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
+// route.get('/loadforlevel3/:tableName/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`call check_lvl3_approvals(?,?)`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             res.status(500).json({error:err.message})
+//             return
+//         }
+//         if(row.length==0){
+//             res.status(404).json({error:"No matches"})
+//             return
+//         }
+//         sql=`call onloadallproposalsforlevel3(?);`
+//         base.query(sql,[dId],(err,rows)=>{
+//             if(err){res.status(500).json({error:err.message});return;}
+//             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
+//             res.status(200).json({rows})
+//         })
+//     })
+// })
+
+// route.get('/loadforlevel3/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let resultArr=[]
+//     let sql=`select report_lvl3,data_table_name from data_approval where dept_id=${dId} and report_lvl3 like concat("%",${eId},"%")`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         if(row.length==0){
+//             console.log("No records")
+//             return
+//         }
+//         // res.status(200).json({row})
+//         for(let i=0;i<row.length;i++){
+//             sql=`select * from ${row[i].data_table_name} where report_proposal_status=2 and lvl_3_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`
+//             base.query(sql,(err,rows)=>{
+//                 if(err){console.log(err);return;}
+//                 if(row.length==0){console.log("No records");return;}
+//                 // res.status(200).json({rows})
+//                 resultArr.push({rows})
+//         })
+//         }
+//         res.status(200).json(resultArr)
+//     })
+// })
+
+route.get('/loadforlevel3/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let resultArr = [];
+    let sql = `select report_lvl3, data_table_name from data_approval where dept_id=? and report_lvl3 like ?`;
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            base.query(sql, [dId, '%' + eId + '%'], (err, row) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            });
+        });
+
+        if (rows.length === 0) {
+            console.log("No records");
+            // res.status(200).json([]);
+            return;
         }
-        if(row.length==0){
-            res.status(404).json({error:"No matches"})
-            return
+
+        for (let i = 0; i < rows.length; i++) {
+            sql = `select * from ${rows[i].data_table_name} where report_proposal_status=2 and lvl_3_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`;
+
+            const resultRows = await new Promise((resolve, reject) => {
+                base.query(sql, (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows);
+                });
+            });
+
+            if (resultRows.length > 0) {
+                resultArr.push({resultRows});
+            }
         }
-        sql=`call onloadallproposalsforlevel3(?);`
-        base.query(sql,[dId],(err,rows)=>{
-            if(err){res.status(500).json({error:err.message});return;}
-            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
-            res.status(200).json({rows})
-        })
-    })
-})
+
+        res.status(200).json({resultArr});
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 route.put('/acknowledgelevel3/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
@@ -494,27 +777,105 @@ route.put('/acknowledgelevel3/:tableName/:deptId/:empId/:report_id',async(req,re
     })
 })
 
-route.get('/loadforlevel4/:tableName/:deptId/:empId',async(req,res)=>{
-    const dId=req.params.deptId
-    const eId=req.params.empId
-    let sql=`call check_lvl4_approvals(?,?)`
-    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
+// route.get('/loadforlevel4/:tableName/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`call check_lvl4_approvals(?,?)`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             res.status(500).json({error:err.message})
+//             return
+//         }
+//         if(row.length==0){
+//             res.status(404).json({error:"No matches"})
+//             return
+//         }
+//         sql=`call onloadallproposalsforlevel4(?);`
+//         base.query(sql,[dId],(err,rows)=>{
+//             if(err){res.status(500).json({error:err.message});return;}
+//             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
+//             res.status(200).json({rows})
+//         })
+//     })
+// })
+
+// route.get('/loadforlevel4/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let resultArr=[]
+//     let sql=`select report_lvl4,data_table_name from data_approval where dept_id=${dId} and report_lvl4 like concat("%",${eId},"%")`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         if(row.length==0){
+//             console.log("No records")
+//             return
+//         }
+//         // res.status(200).json({row})
+//         for(let i=0;i<row.length;i++){
+//             sql=`select * from ${row[i].data_table_name} where report_proposal_status=3 and lvl_4_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`
+//             base.query(sql,(err,rows)=>{
+//                 if(err){console.log(err);return;}
+//                 if(row.length==0){console.log("No records");return;}
+//                 // res.status(200).json({rows})
+//                 resultArr.push({rows})
+//         })
+//         }
+//         res.status(200).json(resultArr)
+//     })
+// })
+
+route.get('/loadforlevel4/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let resultArr = [];
+    let sql = `select report_lvl4, data_table_name from data_approval where dept_id=? and report_lvl4 like ?`;
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            base.query(sql, [dId, '%' + eId + '%'], (err, row) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            });
+        });
+
+        if (rows.length === 0) {
+            console.log("No records");
+            // res.status(200).json([]);
+            return;
         }
-        if(row.length==0){
-            res.status(404).json({error:"No matches"})
-            return
+
+        for (let i = 0; i < rows.length; i++) {
+            sql = `select * from ${rows[i].data_table_name} where report_proposal_status=3 and lvl_4_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`;
+
+            const resultRows = await new Promise((resolve, reject) => {
+                base.query(sql, (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows);
+                });
+            });
+
+            if (resultRows.length > 0) {
+                resultArr.push({resultRows});
+            }
         }
-        sql=`call onloadallproposalsforlevel4(?);`
-        base.query(sql,[dId],(err,rows)=>{
-            if(err){res.status(500).json({error:err.message});return;}
-            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
-            res.status(200).json({rows})
-        })
-    })
-})
+
+        res.status(200).json({resultArr});
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 route.put('/acknowledgelevel4/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
@@ -637,27 +998,107 @@ route.put('/acknowledgelevel4/:tableName/:deptId/:empId/:report_id',async(req,re
         }
     })
 })
-route.get('/loadforlevel5/:tableName/:deptId/:empId',async(req,res)=>{
-    const dId=req.params.deptId
-    const eId=req.params.empId
-    let sql=`call check_lvl5_approvals(?,?)`
-    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
+
+// route.get('/loadforlevel5/:tableName/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`call check_lvl5_approvals(?,?)`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             res.status(500).json({error:err.message})
+//             return
+//         }
+//         if(row.length==0){
+//             res.status(404).json({error:"No matches"})
+//             return
+//         }
+//         sql=`call onloadallproposalsforlevel5(?);`
+//         base.query(sql,[dId],(err,rows)=>{
+//             if(err){res.status(500).json({error:err.message});return;}
+//             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
+//             res.status(200).json({rows})
+//         })
+//     })
+// })
+
+
+// route.get('/loadforlevel5/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let resultArr=[]
+//     let sql=`select report_lvl5,data_table_name from data_approval where dept_id=${dId} and report_lvl5 like concat("%",${eId},"%")`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         if(row.length==0){
+//             console.log("No records")
+//             return
+//         }
+//         // res.status(200).json({row})
+//         for(let i=0;i<row.length;i++){
+//             sql=`select * from ${row[i].data_table_name} where report_proposal_status=4 and lvl_5_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`
+//             base.query(sql,(err,rows)=>{
+//                 if(err){console.log(err);return;}
+//                 if(row.length==0){console.log("No records");return;}
+//                 // res.status(200).json({rows})
+//                 resultArr.push({rows})
+//         })
+//         }
+//         res.status(200).json(resultArr)
+//     })
+// })
+
+route.get('/loadforlevel5/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let resultArr = [];
+    let sql = `select report_lvl5, data_table_name from data_approval where dept_id=${dId} and report_lvl5 like concat("%",${eId},"%")`;
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            base.query(sql, [dId, '%' + eId + '%'], (err, row) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            });
+        });
+
+        if (rows.length === 0) {
+            console.log("No records");
+            // res.status(200).json([]);
+            return;
         }
-        if(row.length==0){
-            res.status(404).json({error:"No matches"})
-            return
+
+        for (let i = 0; i < rows.length; i++) {
+            sql = `select * from ${rows[i].data_table_name} where report_proposal_status=4 and lvl_5_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`;
+
+            const resultRows = await new Promise((resolve, reject) => {
+                base.query(sql, (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows);
+                });
+            });
+
+            if (resultRows.length > 0) {
+                resultArr.push({resultRows});
+            }
         }
-        sql=`call onloadallproposalsforlevel5(?);`
-        base.query(sql,[dId],(err,rows)=>{
-            if(err){res.status(500).json({error:err.message});return;}
-            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
-            res.status(200).json({rows})
-        })
-    })
-})
+
+        res.status(200).json({resultArr});
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 route.put('/acknowledgelevel5/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
@@ -744,27 +1185,82 @@ route.put('/ecrCompletion/:tableName/:report_id',async(req,res)=>{
         })
 })
 
-route.get('/completionloadforlevel1/:tableName/:deptId/:empId',async(req,res)=>{
-    const dId=req.params.deptId
-    const eId=req.params.empId
-    let sql=`select report_lvl1 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl1 like ?`
-    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
+// route.get('/completionloadforlevel1/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`select report_lvl1,data_table_name from data_approval where dept_id=? and report_lvl1 like ?`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         if(row.length==0){
+//             console.log("No approvals")
+//             return
+//         }
+//         let resultArr=[]
+//         for(let i=0;i<row.length;i++){
+//             sql=`select * from ${row[i].data_table_name} where final_proposal_status=1 and lvl_1_completion_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+//             base.query(sql,[dId],(err,rows)=>{
+//                 if(err){console.log(err);return;}
+//                 if(row.length==0){console.log("No records");return;}
+//                 // res.status(200).json({rows})
+//                 resultArr.push({rows})
+//         })
+//         }
+//         res.status(200).json({resultArr})
+//     })
+// })
+
+route.get('/completionloadforlevel1/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let sql = `select report_lvl1,data_table_name from data_approval where dept_id=? and report_lvl1 like ?`;
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            base.query(sql, [dId, '%' + eId + '%'], (err, row) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            });
+        });
+
+        if (rows.length === 0) {
+            console.log("No approvals");
+            // res.status(200).json([]);
+            return;
         }
-        if(row.length==0){
-            res.status(404).json({error:"No matches"})
-            return
+
+        let resultArr = [];
+        for (let i = 0; i < rows.length; i++) {
+            sql = `select * from ${rows[i].data_table_name} where final_proposal_status=1 and lvl_1_completion_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`;
+
+            const resultRows = await new Promise((resolve, reject) => {
+                base.query(sql, [dId], (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows);
+                });
+            });
+
+            if (resultRows.length > 0) {
+                resultArr.push({resultRows});
+            }
         }
-        sql=`select * from ${req.params.tableName} where final_proposal_status=1 and lvl_1_completion_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`
-        base.query(sql,[dId],(err,rows)=>{
-            if(err){res.status(500).json({error:err.message});return;}
-            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
-            res.status(200).json({rows})
-        })
-    })
-})
+
+        res.status(200).json({resultArr});
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 route.put('/completionacknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
@@ -889,27 +1385,103 @@ route.put('/completionacknowledgelevel1/:tableName/:deptId/:empId/:report_id',as
     })
 })
 
-route.get('/completionloadforlevel2/:tableName/:deptId/:empId',async(req,res)=>{
-    const dId=req.params.deptId
-    const eId=req.params.empId
-    let sql=`select report_lvl2 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl2 like ?`
-    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
+// route.get('/completionloadforlevel2/:tableName/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`select report_lvl2 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl2 like ?`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             res.status(500).json({error:err.message})
+//             return
+//         }
+//         if(row.length==0){
+//             res.status(404).json({error:"No matches"})
+//             return
+//         }
+//         sql=`select * from ${req.params.tableName} where report_completion_status=1 and lvl_2_completion_sign is null and final_proposal_status=1 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+//         base.query(sql,[dId],(err,rows)=>{
+//             if(err){res.status(500).json({error:err.message});return;}
+//             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
+//             res.status(200).json({rows})
+//         })
+//     })
+// })
+
+
+// route.get('/completionloadforlevel2/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`select report_lvl2,data_table_name from data_approval where dept_id=? and report_lvl2 like ?`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         if(row.length==0){
+//             console.log("No approvals")
+//             return
+//         }
+//         for(let i=0;i<row.length;i++){
+//             sql=`select * from ${row[i].data_table_name} where report_completion_status=1 and lvl_2_completion_sign is null and final_proposal_status=1 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+//             base.query(sql,[dId],(err,rows)=>{
+//                 if(err){console.log(err);return;}
+//                 if(row.length==0){console.log("No records");return;}
+//                 // res.status(200).json({rows})
+//                 resultArr.push({rows})
+//         })
+//         }
+//     })
+// })
+
+route.get('/completionloadforlevel2/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let resultArr = [];  // Declare resultArr before the loop
+    let sql = `select report_lvl2, data_table_name from data_approval where dept_id=? and report_lvl2 like ?`;
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            base.query(sql, [dId, '%' + eId + '%'], (err, row) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            });
+        });
+
+        if (rows.length === 0) {
+            console.log("No approvals");
+            // res.status(200).json([]);
+            return;
         }
-        if(row.length==0){
-            res.status(404).json({error:"No matches"})
-            return
+
+        for (let i = 0; i < rows.length; i++) {
+            sql = `select * from ${rows[i].data_table_name} where report_completion_status=1 and lvl_2_completion_sign is null and final_proposal_status=1 and final_completion_status=0 and final_report_status=0 and dept_id=?`;
+
+            const resultRows = await new Promise((resolve, reject) => {
+                base.query(sql, [dId], (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows);
+                });
+            });
+
+            if (resultRows.length > 0) {
+                resultArr.push({resultRows});
+            }
         }
-        sql=`select * from ${req.params.tableName} where report_completion_status=1 and lvl_2_completion_sign is null and final_proposal_status=1 and final_completion_status=0 and final_report_status=0 and dept_id=?`
-        base.query(sql,[dId],(err,rows)=>{
-            if(err){res.status(500).json({error:err.message});return;}
-            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
-            res.status(200).json({rows})
-        })
-    })
-})
+
+        res.status(200).json({resultArr});
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 route.put('/completionacknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
@@ -1033,27 +1605,104 @@ route.put('/completionacknowledgelevel2/:tableName/:deptId/:empId/:report_id',as
     })
 })
 
-route.get('/completionloadforlevel3/:tableName/:deptId/:empId',async(req,res)=>{
-    const dId=req.params.deptId
-    const eId=req.params.empId
-    let sql=`select report_lvl3 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl3 like ?`
-    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
+// route.get('/completionloadforlevel3/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`select report_lvl3,data_table_name from data_approval where dept_id=? and report_lvl3 like ?`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             res.status(500).json({error:err.message})
+//             return
+//         }
+//         if(row.length==0){
+//             res.status(404).json({error:"No matches"})
+//             return
+//         }
+//         sql=`select * from ${row[i].data_table_name} where final_proposal_status=1 and lvl_3_completion_sign is null and final_proposal_status=1 and report_completion_status=2 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+//         base.query(sql,[dId],(err,rows)=>{
+//             if(err){res.status(500).json({error:err.message});return;}
+//             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
+//             res.status(200).json({rows})
+//         })
+//     })
+// })
+
+// route.get('/completionloadforlevel3/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`select report_lvl3,data_table_name from data_approval where dept_id=? and report_lvl3 like ?`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         if(row.length==0){
+//             console.log("No approvals")
+//             return
+//         }
+//         for(let i=0;i<row.length;i++){
+//             sql=`select * from ${row[i].data_table_name} where final_proposal_status=1 and lvl_3_completion_sign is null and final_proposal_status=1 and report_completion_status=2 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+//             base.query(sql,[dId],(err,rows)=>{
+//                 if(err){console.log(err);return;}
+//                 if(row.length==0){console.log("No records");return;}
+//                 // res.status(200).json({rows})
+//                 resultArr.push({rows})
+//         })
+//         }
+//     })
+// })
+
+route.get('/completionloadforlevel3/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let sql = `select report_lvl3, data_table_name from data_approval where dept_id=? and report_lvl3 like ?`;
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            base.query(sql, [dId, '%' + eId + '%'], (err, row) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            });
+        });
+
+        if (rows.length === 0) {
+            console.log("No approvals");
+            return;
         }
-        if(row.length==0){
-            res.status(404).json({error:"No matches"})
-            return
+
+        const resultArr = [];
+        for (let i = 0; i < rows.length; i++) {
+            sql = `select * from ${rows[i].data_table_name} where final_proposal_status=1 and lvl_3_completion_sign is null and final_proposal_status=1 and report_completion_status=2 and final_completion_status=0 and final_report_status=0 and dept_id=?`;
+
+            const resultRows = await new Promise((resolve, reject) => {
+                base.query(sql, [dId], (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows);
+                });
+            });
+
+            if (resultRows.length > 0) {
+                resultArr.push({resultRows});
+            }
         }
-        sql=`select * from ${req.params.tableName} where final_proposal_status=1 and lvl_3_completion_sign is null and final_proposal_status=1 and report_completion_status=2 and final_completion_status=0 and final_report_status=0 and dept_id=?`
-        base.query(sql,[dId],(err,rows)=>{
-            if(err){res.status(500).json({error:err.message});return;}
-            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
-            res.status(200).json({rows})
-        })
-    })
-})
+
+        if (resultArr.length > 0) {
+            res.status(200).json({resultArr});
+        } else {
+            console.log("No records");
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 route.put('/completionacknowledgelevel3/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
@@ -1177,27 +1826,103 @@ route.put('/completionacknowledgelevel3/:tableName/:deptId/:empId/:report_id',as
     })
 })
 
-route.get('/completionloadforlevel4/:tableName/:deptId/:empId',async(req,res)=>{
-    const dId=req.params.deptId
-    const eId=req.params.empId
-    let sql=`select report_lvl4 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl4 like ?`
-    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
+// route.get('/completionloadforlevel4/:tableName/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`select report_lvl4,data_table_name from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl4 like ?`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             res.status(500).json({error:err.message})
+//             return
+//         }
+//         if(row.length==0){
+//             res.status(404).json({error:"No matches"})
+//             return
+//         }
+//         sql=`select * from ${row[i].data_table_name} where final_proposal_status=1 and lvl_4_completion_sign is null and report_completion_status=3 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+//         base.query(sql,[dId],(err,rows)=>{
+//             if(err){res.status(500).json({error:err.message});return;}
+//             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
+//             res.status(200).json({rows})
+//         })
+//     })
+// })
+
+// route.get('/completionloadforlevel4/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`select report_lvl4,data_table_name from data_approval where dept_id=? and report_lvl4 like ?`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         if(row.length==0){
+//             console.log("No approvals")
+//             return
+//         }
+//         for(let i=0;i<row.length;i++){
+//             sql=`select * from ${row[i].data_table_name} where final_proposal_status=1 and lvl_4_completion_sign is null and report_completion_status=3 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+//             base.query(sql,[dId],(err,rows)=>{
+//                 if(err){console.log(err);return;}
+//                 if(row.length==0){console.log("No records");return;}
+//                 // res.status(200).json({rows})
+//                 resultArr.push({rows})
+//         })
+//         }
+//         res.status(200).json({resultA})
+//     })
+// })
+
+route.get('/completionloadforlevel4/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let sql = `select report_lvl4, data_table_name from data_approval where dept_id=? and report_lvl4 like ?`;
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            base.query(sql, [dId, '%' + eId + '%'], (err, row) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            });
+        });
+
+        if (rows.length === 0) {
+            console.log("No approvals");
+            return;
         }
-        if(row.length==0){
-            res.status(404).json({error:"No matches"})
-            return
+
+        const resultArr = [];
+        for (let i = 0; i < rows.length; i++) {
+            sql = `select * from ${rows[i].data_table_name} where final_proposal_status=1 and lvl_4_completion_sign is null and report_completion_status=3 and final_completion_status=0 and final_report_status=0 and dept_id=?`;
+
+            const resultRows = await new Promise((resolve, reject) => {
+                base.query(sql, [dId], (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows);
+                });
+            });
+
+            if (resultRows.length > 0) {
+                resultArr.push({ resultRows });
+            }
         }
-        sql=`select * from ${req.params.tableName} where final_proposal_status=1 and lvl_4_completion_sign is null and report_completion_status=3 and final_completion_status=0 and final_report_status=0 and dept_id=?`
-        base.query(sql,[dId],(err,rows)=>{
-            if(err){res.status(500).json({error:err.message});return;}
-            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
-            res.status(200).json({rows})
-        })
-    })
-})
+
+        if (resultArr.length > 0) {
+            res.status(200).json({ resultArr });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 route.put('/completionacknowledgelevel4/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
@@ -1320,27 +2045,104 @@ route.put('/completionacknowledgelevel4/:tableName/:deptId/:empId/:report_id',as
         }
     })
 })
-route.get('/completionloadforlevel5/:tableName/:deptId/:empId',async(req,res)=>{
-    const dId=req.params.deptId
-    const eId=req.params.empId
-    let sql=`select report_lvl5 from data_approval where dept_id=? and data_table_name="${req.params.tableName}" and report_lvl5 like ?`
-    base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
+
+// route.get('/completionloadforlevel5/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`select report_lvl5,data_table_name from data_approval where dept_id=? and report_lvl5 like ?`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             res.status(500).json({error:err.message})
+//             return
+//         }
+//         if(row.length==0){
+//             res.status(404).json({error:"No matches"})
+//             return
+//         }
+//         sql=`select * from ${row[i].data_table_name} where final_proposal_status=1 and lvl_5_completion_sign is null and report_completion_status=4 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+//         base.query(sql,[dId],(err,rows)=>{
+//             if(err){res.status(500).json({error:err.message});return;}
+//             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
+//             res.status(200).json({rows})
+//         })
+//     })
+// })
+
+// route.get('/completionloadforlevel5/:deptId/:empId',async(req,res)=>{
+//     const dId=req.params.deptId
+//     const eId=req.params.empId
+//     let sql=`select report_lvl5,data_table_name from data_approval where dept_id=? and report_lvl5 like ?`
+//     base.query(sql,[dId,'%'+eId+'%'],(err,row)=>{
+//         if(err){
+//             console.log(err)
+//             return
+//         }
+//         if(row.length==0){
+//             console.log("No approvals")
+//             return
+//         }
+//         for(let i=0;i<row.length;i++){
+//             sql=`select * from ${row[i].data_table_name} where final_proposal_status=1 and lvl_5_completion_sign is null and report_completion_status=4 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+//             base.query(sql,[dId],(err,rows)=>{
+//                 if(err){console.log(err);return;}
+//                 if(row.length==0){console.log("No records");return;}
+//                 // res.status(200).json({rows})
+//                 resultArr.push({rows})
+//         })
+//         }
+//         res.status(200).json({resultA})
+//     })
+// })
+
+route.get('/completionloadforlevel5/:deptId/:empId', async (req, res) => {
+    const dId = req.params.deptId;
+    const eId = req.params.empId;
+    let sql = `select report_lvl5, data_table_name from data_approval where dept_id=? and report_lvl5 like ?`;
+
+    try {
+        const rows = await new Promise((resolve, reject) => {
+            base.query(sql, [dId, '%' + eId + '%'], (err, row) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                    return;
+                }
+                resolve(row);
+            });
+        });
+
+        if (rows.length === 0) {
+            console.log("No approvals");
+            return;
         }
-        if(row.length==0){
-            res.status(404).json({error:"No matches"})
-            return
+
+        const resultArr = [];
+        for (let i = 0; i < rows.length; i++) {
+            sql = `select * from ${rows[i].data_table_name} where final_proposal_status=1 and lvl_5_completion_sign is null and report_completion_status=4 and final_completion_status=0 and final_report_status=0 and dept_id=?`;
+
+            const resultRows = await new Promise((resolve, reject) => {
+                base.query(sql, [dId], (err, rows) => {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                        return;
+                    }
+                    resolve(rows);
+                });
+            });
+
+            if (resultRows.length > 0) {
+                resultArr.push({ resultRows });
+            }
         }
-        sql=`select * from ${req.params.tableName} where final_proposal_status=1 and lvl_5_completion_sign is null and report_completion_status=4 and final_completion_status=0 and final_report_status=0 and dept_id=?`
-        base.query(sql,[dId],(err,rows)=>{
-            if(err){res.status(500).json({error:err.message});return;}
-            if(row.length==0){res.status(404).json({error:"Nothing to show"})}
-            res.status(200).json({rows})
-        })
-    })
-})
+
+        if (resultArr.length > 0) {
+            res.status(200).json({ resultArr });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 route.put('/completionacknowledgelevel5/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId

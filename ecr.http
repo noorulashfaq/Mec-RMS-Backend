@@ -3,7 +3,6 @@ POST http://localhost:4321/ecr/ecrProposal/data_management_seminar
 Content-Type: application/json
 
 {
-    "report_id":"RPT5001",
     "event_name":"seminar",
     "event_title":"Vue JS",
     "event_organizer":"CSE",
@@ -32,7 +31,7 @@ Content-Type: application/json
 
 ### Level 1 proposal
 
-GET http://localhost:4321/ecr/loadforlevel1/data_management_seminar/1/6001
+GET http://localhost:4321/ecr/loadforlevel1/1/6001
 
 ###
 
@@ -40,7 +39,7 @@ PUT http://localhost:4321/ecr/acknowledgelevel1/data_management_seminar/1/6001/R
 
 ### Level 2 proposal
 
-GET http://localhost:4321/ecr/loadforlevel2/data_management_seminar/1/6000
+GET http://localhost:4321/ecr/loadforlevel2/1/6000
 
 ###
 
@@ -48,7 +47,7 @@ PUT http://localhost:4321/ecr/acknowledgelevel2/data_management_seminar/1/6000/R
 
 ### Level 3 proposal
 
-GET http://localhost:4321/ecr/loadforlevel3/data_management_seminar/4/6007
+GET http://localhost:4321/ecr/loadforlevel3/4/6007
 
 ###
 
@@ -56,7 +55,7 @@ PUT http://localhost:4321/ecr/acknowledgelevel3/data_management_seminar/4/6007/R
 
 ### Level 4 proposal
 
-GET http://localhost:4321/ecr/loadforlevel4/data_management_seminar/4/6005
+GET http://localhost:4321/ecr/loadforlevel4/4/6005
 
 ###
 
@@ -64,7 +63,7 @@ PUT http://localhost:4321/ecr/acknowledgelevel4/data_management_seminar/4/6005/R
 
 ### Level 5 proposal
 
-GET http://localhost:4321/ecr/loadforlevel5/data_management_seminar/4/6009
+GET http://localhost:4321/ecr/loadforlevel5/4/6009
 
 ###
 
@@ -102,7 +101,7 @@ Content-Type: application/json
 
 ### Level 1 completion
 
-GET http://localhost:4321/ecr/completionloadforlevel1/data_management_seminar/4/6003
+GET http://localhost:4321/ecr/completionloadforlevel1/1/6004
 
 ###
 
